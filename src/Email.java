@@ -36,7 +36,7 @@ public class Email
 	}
 	public void setSubject(String subject) 
 	{
-		subject = subject;
+		this.subject = subject;
 	}
 	public EmailAddress getSenderAddress() 
 	{
@@ -60,7 +60,7 @@ public class Email
 	}
 	public void setBody(String body) 
 	{
-		body = body;
+		this.body = body;
 	}
 	
 	

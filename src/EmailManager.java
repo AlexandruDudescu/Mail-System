@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Queue;
 
 public class EmailManager 
 {
@@ -9,13 +10,29 @@ public class EmailManager
 		return newEmail;
 	}
 	
-	public void sendEmail()
+	public void sendEmail(Email email)
 	{
+		Queue<Email> destinationInbox = email.getDestinationAddress().getInbox();
+		Queue<Email> senderSend = email.getSenderAddress().getSent();
 		
+		destinationInbox.add(email);
+		senderSend.add(email);
 	}
 	
-	public void deleteEmail()
+	public void deleteEmail(Email email)
 	{
+		Queue<Email> inbox = email.getDestinationAddress().getInbox();
+		Queue<Email> trash = email.getDestinationAddress().getTrash();
 		
+		if(inbox.contains(email))
+		{
+			inbox.remove(email);
+			trash.add(email);
+		}
+		
+		if(trash.contains(email))
+		{
+			trash.remove(email);
+		}
 	}
 }
