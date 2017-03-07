@@ -4,8 +4,8 @@ public class Email
 {
 	private EmailAddress destinationAddress;
 	private EmailAddress senderAddress;
-	private String Subject;
-	private String Body;
+	private String subject;
+	private String body;
 	private Date timeStamp;
 	
 	public Email()
@@ -13,13 +13,13 @@ public class Email
 		
 	}
 	
-	public Email(EmailAddress destinationAddress, EmailAddress senderAddress, String Subject, String Body, Date TimeStamp)
+	public Email(EmailAddress destinationAddress, EmailAddress senderAddress, String subject, String body, Date timeStamp)
 	{
 		this.destinationAddress = destinationAddress;
 		this.senderAddress = senderAddress;
-		this.Subject = Subject;
-		this.Body = Body;
-		this.timeStamp = TimeStamp;
+		this.subject = subject;
+		this.body = body;
+		this.timeStamp = timeStamp;
 	}
 	
 	public EmailAddress getDestinationAddress() 
@@ -32,11 +32,11 @@ public class Email
 	}
 	public String getSubject() 
 	{
-		return Subject;
+		return subject;
 	}
 	public void setSubject(String subject) 
 	{
-		Subject = subject;
+		subject = subject;
 	}
 	public EmailAddress getSenderAddress() 
 	{
@@ -56,11 +56,11 @@ public class Email
 	}
 	public String getBody() 
 	{
-		return Body;
+		return body;
 	}
 	public void setBody(String body) 
 	{
-		Body = body;
+		body = body;
 	}
 	
 	
