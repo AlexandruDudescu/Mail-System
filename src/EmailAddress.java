@@ -1,4 +1,4 @@
-import java.util.Queue;
+import java.util.ArrayList;
 
 /**
  * Model class for an Email address.
@@ -8,29 +8,64 @@ import java.util.Queue;
 public class EmailAddress 
 {
 	private String serverDomain;
-	private Queue<Email> inbox;
-	private Queue<Email> sent;
-	private Queue<Email> trash;
+	private ArrayList<Email> inbox;
+	private ArrayList<Email> sent;
+	private ArrayList<Email> trash;
 	
 	public EmailAddress()
 	{
 		
+		inbox = new ArrayList<Email>();
+		sent = new ArrayList<Email>();
+		trash = new ArrayList<Email>();
+				
+		Email inboxEmail = new Email();
+		Email sentEmail = new Email();
+		Email trashEmail = new Email();
+		
+		// ----- For debbuging purpose only -----
+		inboxEmail.setSubject("Inbox email subject");
+		sentEmail.setSubject("Sent email subject");
+		trashEmail.setSubject("Trash email subject");
+		
+		inbox.add(inboxEmail);
+		sent.add(sentEmail);
+		trash.add(trashEmail);
+		// --------------------------------------
 	}
 	
 	public EmailAddress(String serverDomain)
 	{
+		inbox = new ArrayList<Email>();
+		sent = new ArrayList<Email>();
+		trash = new ArrayList<Email>();
+		
 		this.serverDomain = serverDomain;
+		
+		// ----- For debbuging purpose only -----
+		Email inboxEmail = new Email();
+		Email sentEmail = new Email();
+		Email trashEmail = new Email();
+		
+		inboxEmail.setSubject("Inbox email subject");
+		sentEmail.setSubject("Sent email subject");
+		trashEmail.setSubject("Trash email subject");
+		
+		inbox.add(inboxEmail);
+		sent.add(sentEmail);
+		trash.add(trashEmail);
+		// --------------------------------------
 	}
 	
 	public String getServerDomain() { return serverDomain; }
 	public void setServerDomain(String serverDomain) { this.serverDomain = serverDomain; }
 	
-	public Queue<Email> getInbox() { return inbox; }
-	public void setInbox(Queue<Email> inbox) { this.inbox = inbox; }
+	public ArrayList<Email> getInbox() { return (ArrayList<Email>) inbox.clone(); }
+	public void setInbox(ArrayList<Email> inbox) { this.inbox = inbox; }
 	
-	public Queue<Email> getSent() { return sent; }
-	public void setSent(Queue<Email> sent) { this.sent = sent; }
+	public ArrayList<Email> getSent() { return (ArrayList<Email>) sent.clone(); }
+	public void setSent(ArrayList<Email> sent) { this.sent = sent; }
 	
-	public Queue<Email> getTrash() { return trash; }
-	public void setTrash(Queue<Email> trash) { this.trash = trash; }
+	public ArrayList<Email> getTrash() { return (ArrayList<Email>) trash.clone(); }
+	public void setTrash(ArrayList<Email> trash) { this.trash = trash; }
 }

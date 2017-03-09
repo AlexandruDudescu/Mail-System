@@ -1,5 +1,11 @@
 import java.util.Date;
 
+/**
+ * Model Class for an email 
+ * @author Reed Schoon
+ *
+ */
+
 public class Email 
 {
 	private EmailAddress destinationAddress;

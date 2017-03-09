@@ -1,12 +1,35 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Controller class to handle the Accounts in the system
+ * @author Kevin Wang
+ *
+ */
+
 public class AccountManager 
 {
+	private Scanner sc;
+	private static ArrayList<Account> accounts;
+	
 	public AccountManager()
 	{
-		local = new ArrayList<Account>();
-		remote = new ArrayList<Account>();
+		accounts = new ArrayList<Account>();
+		
+		// ----- For debbuging purpose only -----
+		Account account1 = new Account("Kevin");
+		Account account2 = new Account("Reed");
+		Account account3 = new Account("Alex");
+		
+		accounts.add(account1);
+		accounts.add(account2);
+		accounts.add(account3);
+		// --------------------------------------
+	}
+	
+	public static ArrayList<Account> getAccountList()
+	{
+		return (ArrayList<Account>) accounts.clone();
 	}
 	
 	public void CreateUser(Account newAccount)
@@ -18,11 +41,11 @@ public class AccountManager
 		int i = sc.nextInt();
 		if(i == 1)
 		{
-			local.add(newAccount);
+			//local.add(newAccount);
 		}
 		else if(i == 2)
 		{
-			remote.add(newAccount);
+			//remote.add(newAccount);
 		}
 		else
 		{
@@ -39,8 +62,5 @@ public class AccountManager
 	{
 		
 	}
-	
-	private ArrayList<Account> local;
-	private ArrayList<Account> remote;
-	private Scanner sc;
+
 }

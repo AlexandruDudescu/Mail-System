@@ -1,10 +1,23 @@
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Queue;
-
+/**
+ * Controller class to manage Email modell flow within the system
+ * @author Alexandru Dudescu
+ *
+ */
 public class EmailManager 
 {
+	/**
+	 * Creates and returns a new email.
+	 * @param destinationAddress the email address of destination
+	 * @param senderAddress the sender's address
+	 * @param subject email subject
+	 * @param body email body
+	 * @param timeStamp time email was sent
+	 * @return
+	 */
 	public Email CreateEmail(EmailAddress destinationAddress, EmailAddress senderAddress, String subject, String body, Date timeStamp)
-	{
+	{	
 		Email newEmail = new Email(destinationAddress, senderAddress, subject, body, timeStamp);
 		
 		return newEmail;
@@ -12,8 +25,8 @@ public class EmailManager
 	
 	public void sendEmail(Email email)
 	{
-		Queue<Email> destinationInbox = email.getDestinationAddress().getInbox();
-		Queue<Email> senderSend = email.getSenderAddress().getSent();
+		ArrayList<Email> destinationInbox = email.getDestinationAddress().getInbox();
+		ArrayList<Email> senderSend = email.getSenderAddress().getSent();
 		
 		destinationInbox.add(email);
 		senderSend.add(email);
@@ -21,8 +34,8 @@ public class EmailManager
 	
 	public void deleteEmail(Email email)
 	{
-		Queue<Email> inbox = email.getDestinationAddress().getInbox();
-		Queue<Email> trash = email.getDestinationAddress().getTrash();
+		ArrayList<Email> inbox = email.getDestinationAddress().getInbox();
+		ArrayList<Email> trash = email.getDestinationAddress().getTrash();
 		
 		if(inbox.contains(email))
 		{
