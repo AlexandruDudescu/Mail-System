@@ -19,8 +19,8 @@ public class GUIAccountTreeManager
 		{ 
 			accountNode = new DefaultMutableTreeNode(account.getEmailName());
 			  
-			local = account.getLocalAdresses();
-			remote = account.getRemoteAdresses();
+			local = account.getLocalAddresses();
+			remote = account.getRemoteAddresses();
 			  
 			//Get emailAddresses from the local branch
 			branchNode = new DefaultMutableTreeNode("local");

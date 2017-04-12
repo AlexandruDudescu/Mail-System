@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 /**
- * Controller class to manage Email modell flow within the system
+ * Controller class to manage Email model flow within the system
  * @author Alexandru Dudescu
  *
  */
@@ -16,14 +16,14 @@ public class EmailManager
 	 * @param timeStamp time email was sent
 	 * @return
 	 */
-	public Email CreateEmail(EmailAddress destinationAddress, EmailAddress senderAddress, String subject, String body, Date timeStamp)
+	public static Email CreateEmail(EmailAddress destinationAddress, EmailAddress senderAddress, String subject, String body, Date timeStamp)
 	{	
 		Email newEmail = new Email(destinationAddress, senderAddress, subject, body, timeStamp);
 		
 		return newEmail;
 	}
 	
-	public void sendEmail(Email email)
+	public static void sendEmail(Email email)
 	{
 		ArrayList<Email> destinationInbox = email.getDestinationAddress().getInbox();
 		ArrayList<Email> senderSend = email.getSenderAddress().getSent();

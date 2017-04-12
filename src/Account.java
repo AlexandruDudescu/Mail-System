@@ -39,12 +39,12 @@ public class Account
 		remote.add(remoteAddress);
 	}
 	
-	public ArrayList<EmailAddress> getLocalAdresses()
+	public ArrayList<EmailAddress> getLocalAddresses()
 	{
 		return (ArrayList<EmailAddress>) local.clone();
 	}
 	
-	public ArrayList<EmailAddress> getRemoteAdresses()
+	public ArrayList<EmailAddress> getRemoteAddresses()
 	{
 		return (ArrayList<EmailAddress>) remote.clone();
 	}

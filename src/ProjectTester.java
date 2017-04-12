@@ -3,7 +3,7 @@
  * @author Kevin Wang
  *
  */
-public class ProjectTester 
+class ProjectTester 
 {
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
