@@ -14,7 +14,7 @@ public class ValidateServices
 	 * @param account
 	 * @return true if account is unique, false if account is not unique
 	 */
-	public static boolean ValidateAccount( String account )
+	public static boolean ValidateServer( ArrayList<Account> accountClone, String username, String serverName )
 	{
 		return true;
 	}

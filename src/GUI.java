@@ -36,24 +36,34 @@ import javax.swing.tree.TreeSelectionModel;
 public class GUI extends JComponent implements TreeSelectionListener 
 {
 //Menu variables
-	JMenuBar menuBar;
-	JMenu accounts;
-	JMenuItem addAccount;
-	JMenuItem removeAccount;
+	JMenuBar menuBar = null;
+	JMenu accountsMenu = null;
+	JMenu userMenu = null;
+	JMenuItem addAccount = null;
+	JMenuItem removeAccount = null;
+	JMenuItem addUser = null;
+	JMenuItem removeUser = null;
 //Frame variables
 	JFrame frame = new JFrame("Simple Email - Team Void");
 	JFrame composeFrame = null;
 	JFrame replyFrame = null;
+	JFrame accountMenuFrame = null;
+	JFrame userMenuFrame = null;
 //Panel variables	
 	JPanel buttonPanel = new JPanel();
 	JPanel textPanel = new JPanel();
 	JPanel labelPanel = new JPanel();	
 //Button variables	
+	JButton accountMenuButton = null;
+	JButton userMenuButton = null;
 	JButton composeButton = new JButton("Compose");
 	JButton replyButton = new JButton("Reply");
 	JButton sendButton = new JButton ("Send");
 	JButton removeButton = new JButton("Remove");
 //Text Field variables
+	JTextField accountMenuTextField = new JTextField(30);
+	JTextField accountMenuTextField02 = new JTextField(30);
+	JTextField userMenuTextField = new JTextField(30);
 	JTextField fromTextField = new JTextField(30);
 	JTextField toTextField = new JTextField(30);
 	JTextField subjectTextField = new JTextField(30);
@@ -71,12 +81,18 @@ public class GUI extends JComponent implements TreeSelectionListener
 	{
 		//Menu code
 		menuBar = new JMenuBar();
-		accounts = new JMenu("Account");
+		accountsMenu = new JMenu("Account");
+		userMenu = new JMenu("User");
 		addAccount = new JMenuItem("Add Account");
 		removeAccount = new JMenuItem("Remove Account");
-		menuBar.add(accounts);
-		accounts.add(addAccount);
-		accounts.add(removeAccount);
+		addUser = new JMenuItem("Add User");
+		removeUser = new JMenuItem("Remove User");
+		menuBar.add(accountsMenu);
+		menuBar.add(userMenu);
+		accountsMenu.add(addAccount);
+		accountsMenu.add(removeAccount);
+		userMenu.add(addUser);
+		userMenu.add(removeUser);
 		//Button panel code
 		buttonPanel.setLayout(new GridLayout(1, 2));
 		buttonPanel.add(composeButton);
@@ -105,8 +121,60 @@ public class GUI extends JComponent implements TreeSelectionListener
 		{
 			public void actionPerformed(ActionEvent event)
 			{
-				//TODO: add menu button functionality
-				System.out.println("Test: Add");
+				if( accountMenuFrame == null )
+				{
+					accountMenuFrame = new JFrame("Add Account");
+					accountMenuButton = new JButton("Add");
+					accountMenuFrame.setLayout(new FormLayout());
+					accountMenuFrame.add(new JLabel("User Name:"));
+					accountMenuFrame.add(accountMenuTextField);
+					accountMenuFrame.add(new JLabel("Email Server:"));
+					accountMenuFrame.add(accountMenuTextField02);
+					accountMenuFrame.add(new JLabel(""));
+					accountMenuFrame.add(accountMenuButton);
+					accountMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					accountMenuFrame.setResizable(false);
+					accountMenuFrame.pack();
+					accountMenuFrame.setVisible(true);
+					accountMenuFrame.setAlwaysOnTop(true);
+					accountMenuFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+					{
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
+					    {
+					    	accountMenuTextField.setText("");
+					    	accountMenuFrame.setVisible(false);
+					    	accountMenuFrame.dispose();
+					    	accountMenuFrame = null;
+					    }
+					});
+					
+					accountMenuButton.addActionListener(new ActionListener()
+					{
+						public void actionPerformed(ActionEvent event)
+						{
+							if( accountMenuFrame != null )
+							{
+								if( !accountMenuTextField.getText().isEmpty() && !accountMenuTextField02.getText().isEmpty() )
+								{
+									if( AccountManager.CreateServer(accountMenuTextField.getText(), accountMenuTextField02.getText(), true ))
+									{
+										accountMenuTextField.setText("");
+										accountMenuFrame.setVisible(false);
+										accountMenuFrame.dispose();
+										accountMenuFrame = null;
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(userMenuFrame, 
+									            "That account already exists. Please choose a different account name.", "Error", 
+									            JOptionPane.OK_OPTION);
+									}
+								}
+							}
+						}
+					});
+				}
 			}
 		});
 		
@@ -116,6 +184,123 @@ public class GUI extends JComponent implements TreeSelectionListener
 			{
 				//TODO: add menu button functionality
 				System.out.println("Test: Remove");
+			}
+		});
+		
+		addUser.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				if( userMenuFrame == null )
+				{
+					userMenuFrame = new JFrame("Add User");
+					userMenuButton = new JButton("Add");
+					userMenuFrame.setLayout(new FormLayout());
+					userMenuFrame.add(new JLabel("User Name:"));
+					userMenuFrame.add(userMenuTextField);
+					userMenuFrame.add(new JLabel(""));
+					userMenuFrame.add(userMenuButton);
+					userMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					userMenuFrame.setResizable(false);
+					userMenuFrame.pack();
+					userMenuFrame.setVisible(true);
+					userMenuFrame.setAlwaysOnTop(true);
+					userMenuFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+					{
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
+					    {
+					    	userMenuTextField.setText("");
+					    	userMenuFrame.setVisible(false);
+					    	userMenuFrame.dispose();
+					    	userMenuFrame = null;
+					    }
+					});
+					
+					userMenuButton.addActionListener(new ActionListener()
+					{
+						public void actionPerformed(ActionEvent event)
+						{
+							if( userMenuFrame != null )
+							{
+								if( !userMenuTextField.getText().isEmpty() )
+								{
+									if( AccountManager.CreateAccount(userMenuTextField.getText()) )
+									{
+										userMenuTextField.setText("");
+										userMenuFrame.setVisible(false);
+								    	userMenuFrame.dispose();
+								    	userMenuFrame = null;
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(userMenuFrame, 
+									            "That user name already exists. Please choose a different user name.", "Error", 
+									            JOptionPane.OK_OPTION);
+									}
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+		
+		removeUser.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				if( userMenuFrame == null )
+				{
+					userMenuFrame = new JFrame("Remove User");
+					userMenuButton = new JButton("Remove");
+					userMenuFrame.setLayout(new FormLayout());
+					userMenuFrame.add(new JLabel("User Name:"));
+					userMenuFrame.add(userMenuTextField);
+					userMenuFrame.add(new JLabel(""));
+					userMenuFrame.add(userMenuButton);
+					userMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					userMenuFrame.setResizable(false);
+					userMenuFrame.pack();
+					userMenuFrame.setVisible(true);
+					userMenuFrame.setAlwaysOnTop(true);
+					userMenuFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+					{
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
+					    {
+					    	userMenuFrame.setVisible(false);
+					    	userMenuFrame.dispose();
+					    	userMenuFrame = null;
+					    }
+					});
+					
+					userMenuButton.addActionListener(new ActionListener()
+					{
+						public void actionPerformed(ActionEvent event)
+						{
+							if( userMenuFrame != null )
+							{
+								if( !userMenuTextField.getText().isEmpty() )
+								{
+									if( AccountManager.DeleteAccount(userMenuTextField.getText()) )
+									{
+										userMenuTextField.setText("");
+										userMenuFrame.setVisible(false);
+								    	userMenuFrame.dispose();
+								    	userMenuFrame = null;
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(userMenuFrame, 
+									            "Cannot find the specified user name.", "Error", 
+									            JOptionPane.OK_OPTION);
+									}
+								}
+							}
+						}
+					});
+				}
 			}
 		});
 		
@@ -161,6 +346,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				composeFrame.setResizable(false);
 				composeFrame.pack();
 				composeFrame.setVisible(true);
+				composeFrame.setAlwaysOnTop(true);
 				//Prompt the user on close if text was written in any of the fields
 				composeFrame.addWindowListener(new java.awt.event.WindowAdapter() 
 				{
@@ -169,7 +355,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				    {
 				    	if( !fromTextField.getText().isEmpty() || !toTextField.getText().isEmpty() || !subjectTextField.getText().isEmpty() || !bodyTextArea.getText().isEmpty() )
 				    	{
-					        if (JOptionPane.showConfirmDialog(frame, 
+					        if (JOptionPane.showConfirmDialog(composeFrame, 
 					            "Are you sure to close this window? Anything you've written won't be saved or sent.", "Close Confirmation", 
 					            JOptionPane.YES_NO_OPTION,
 					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
@@ -231,6 +417,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				replyFrame.setResizable(false);
 				replyFrame.pack();
 				replyFrame.setVisible(true);
+				replyFrame.setAlwaysOnTop(true);
 				//Prompt the user on close if text was written in any of the fields
 				replyFrame.addWindowListener(new java.awt.event.WindowAdapter() 
 				{
@@ -239,7 +426,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				    {
 				    	if( !fromTextField.getText().isEmpty() || !toTextField.getText().isEmpty() || !subjectTextField.getText().isEmpty() || !bodyTextArea.getText().isEmpty() )
 				    	{
-					        if (JOptionPane.showConfirmDialog(frame, 
+					        if (JOptionPane.showConfirmDialog(replyFrame, 
 					            "Are you sure to close this window? Anything you've written won't be saved or sent.", "Close Confirmation", 
 					            JOptionPane.YES_NO_OPTION,
 					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
@@ -279,6 +466,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 						if( accountClone.get(i).getEmailName().equals(toParts[0]) )
 						{
 							hasFoundToName = true;
+							System.out.println("1");
 							break;
 						}
 					}
@@ -288,6 +476,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 						if( accountClone.get(j).getEmailName().equals(fromParts[0]) )
 						{
 							hasFoundFromName = true;
+							System.out.println("2");
 							break;
 						}
 					}
@@ -382,7 +571,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		
 		//Tree logic
 		 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Accounts" +
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Users" +
 		"                                                                            "); //spacing
 		treeView = new JScrollPane();
 		

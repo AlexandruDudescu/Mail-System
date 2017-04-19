@@ -27,6 +27,7 @@ public class AccountManager
 		// --------------------------------------
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Account> getAccountList()
 	{
 		return (ArrayList<Account>) accounts.clone();
@@ -53,6 +54,16 @@ public class AccountManager
 				accounts.remove(i);
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	public static boolean CreateServer(String userName, String serverName, boolean isLocal)
+	{
+		if( ValidateServices.ValidateServer( getAccountList(), userName, serverName) )
+		{
+			//TODO: add functionality
+			return true;	
 		}
 		return false;
 	}
