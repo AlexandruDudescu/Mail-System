@@ -166,4 +166,85 @@ public class GUIAccountTreeManager
 		
 		return selectedEmail.getContent();
 	}
+
+	public static DefaultMutableTreeNode getNodeByAccountBranch(String accountName, boolean isLocal, DefaultMutableTreeNode root)
+	{
+		
+		//Search for the account
+		DefaultMutableTreeNode accountNode = null;
+
+		for(int i = 0; i < root.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
+			
+			if(n.getUserObject().toString().equals(accountName))
+			{
+				accountNode = n;
+				break;
+			}
+		}
+		
+
+		return (DefaultMutableTreeNode) accountNode.getChildAt((isLocal)? 0 : 1);
+
+	}
+	
+	public static DefaultMutableTreeNode createEmailAddressNode(String newEmailAddressName)
+	{
+		//Create the new addres node
+		DefaultMutableTreeNode newEmailAddress = new DefaultMutableTreeNode(newEmailAddressName);
+		
+		newEmailAddress.add(new DefaultMutableTreeNode("Inbox"));
+		newEmailAddress.add(new DefaultMutableTreeNode("Sent"));
+		newEmailAddress.add(new DefaultMutableTreeNode("Trash"));
+		
+		return newEmailAddress;
+	}
+	
+	public static void removeEmailAddressFromNode(String emailAddress, DefaultMutableTreeNode accountBranch)
+	{
+		DefaultMutableTreeNode emailNode = null;
+		
+		for(int i = 0; i < accountBranch.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode child = (DefaultMutableTreeNode) accountBranch.getChildAt(i);
+			
+			if(child.getUserObject().equals(emailAddress))
+			{
+				emailNode = child;
+				break;
+			}
+		}
+		
+		accountBranch.remove(emailNode);
+	}
+
+	public static DefaultMutableTreeNode createNewAccountNode(String accountName)
+	{
+		DefaultMutableTreeNode newAccount = new DefaultMutableTreeNode(accountName);
+		
+		//Generate accountStructure
+		newAccount.add(new DefaultMutableTreeNode("Local"));
+		newAccount.add(new DefaultMutableTreeNode("Remore"));
+		
+		return newAccount;
+	}
+
+	public static DefaultMutableTreeNode getAccountNode(String accountName, DefaultMutableTreeNode root)
+	{
+		DefaultMutableTreeNode accountNode = null;
+		
+		for(int i = 0; i < root.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
+			
+			if(n.getUserObject().toString().equals(accountName))
+			{
+				accountNode = n;
+				break;
+			}
+		}
+		
+		return accountNode;
+	}
 }

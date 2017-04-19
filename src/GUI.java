@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -74,6 +75,9 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JTree tree;
 	JScrollPane treeView;
 	JScrollPane screenScroller = new JScrollPane(screen);
+	DefaultMutableTreeNode root;
+	DefaultMutableTreeNode currentlySelectedNode;
+	DefaultTreeModel model;
 	
     Date now = null;
 	
@@ -107,7 +111,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		gridLayout.setVgap(10);
 		labelPanel.setLayout(gridLayout);
 
-		screen.setBackground(Color.lightGray);
+		screen.setBackground(Color.white);
 		screen.setBorder(BorderFactory.createBevelBorder(1));
 		
 		textPanel.setBorder(new EmptyBorder(10,10,10,10));
@@ -159,10 +163,14 @@ public class GUI extends JComponent implements TreeSelectionListener
 								{
 									if( AccountManager.CreateServer(accountMenuTextField.getText(), accountMenuTextField02.getText(), true ))
 									{
+										//Update GUI 
+										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
+										model.insertNodeInto(GUIAccountTreeManager.createEmailAddressNode(accountMenuTextField02.getText()), AccountBranchNode, AccountBranchNode.getChildCount());
+										
 										accountMenuTextField.setText("");
 										accountMenuFrame.setVisible(false);
 										accountMenuFrame.dispose();
-										accountMenuFrame = null;
+										accountMenuFrame = null;										
 									}
 									else
 									{
@@ -184,6 +192,15 @@ public class GUI extends JComponent implements TreeSelectionListener
 			{
 				//TODO: add menu button functionality
 				System.out.println("Test: Remove");
+				
+				if( accountMenuFrame != null )
+				{
+					if( !accountMenuTextField.getText().isEmpty() && !accountMenuTextField02.getText().isEmpty() )
+					{
+						DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
+						GUIAccountTreeManager.removeEmailAddressFromNode(accountMenuTextField02.getText(), AccountBranchNode);
+					}
+				}
 			}
 		});
 		
@@ -227,6 +244,10 @@ public class GUI extends JComponent implements TreeSelectionListener
 								{
 									if( AccountManager.CreateAccount(userMenuTextField.getText()) )
 									{
+										//GUI logic
+										DefaultMutableTreeNode newAccount = GUIAccountTreeManager.createNewAccountNode(userMenuTextField.getText());
+										model.insertNodeInto(newAccount, root, root.getChildCount());
+										
 										userMenuTextField.setText("");
 										userMenuFrame.setVisible(false);
 								    	userMenuFrame.dispose();
@@ -285,6 +306,9 @@ public class GUI extends JComponent implements TreeSelectionListener
 								{
 									if( AccountManager.DeleteAccount(userMenuTextField.getText()) )
 									{
+										DefaultMutableTreeNode accountToDelete = GUIAccountTreeManager.getAccountNode(userMenuTextField.getText(), root);
+										model.removeNodeFromParent(accountToDelete);
+										
 										userMenuTextField.setText("");
 										userMenuFrame.setVisible(false);
 								    	userMenuFrame.dispose();
@@ -517,6 +541,13 @@ public class GUI extends JComponent implements TreeSelectionListener
 				        System.out.println(toTextField.getText());
 				        System.out.println(subjectString);
 				        System.out.println(bodyString);
+				        
+				        //GUI logic
+				        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
+				        DefaultMutableTreeNode fromNode = GUIAccountTreeManager.getNodeByEmail(fromTextField.getText(), root);
+				        
+				        GUIAccountTreeManager.addEmailToNode(newEmail, toNode, model, "Inbox");
+				        GUIAccountTreeManager.addEmailToNode(newEmail, fromNode, model, "Sent");
 					}
 				}
 			}
@@ -571,13 +602,14 @@ public class GUI extends JComponent implements TreeSelectionListener
 		
 		//Tree logic
 		 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Users" +
+		root = new DefaultMutableTreeNode("Users" +
 		"                                                                            "); //spacing
 		treeView = new JScrollPane();
 		
 		tree = new JTree(root);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         
+        model = (DefaultTreeModel)tree.getModel();
         GUIAccountTreeManager.addUserDataToTree(root);
         tree.addTreeSelectionListener(this);
         treeView = new JScrollPane(tree);
@@ -601,6 +633,11 @@ public class GUI extends JComponent implements TreeSelectionListener
 	@Override
 	public void valueChanged(TreeSelectionEvent arg0) 
 	{
+		currentlySelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		
+		if(currentlySelectedNode.getLevel() ==  5)
+			screen.setText(((Email) currentlySelectedNode.getUserObject()).getContent()); 
+			
 	}
 	
 	private EmailAddress toEmailAddress;
