@@ -1,5 +1,7 @@
 import java.awt.*;
 
+import javax.swing.JButton;
+
 /**
    A layout manager that lays out components along a central axis
 */
@@ -54,8 +56,18 @@ public class FormLayout implements LayoutManager
          cleft.setBounds(xcenter - dleft.width, y + (height 
                - dleft.height) / 2, dleft.width, dleft.height);
 
-         cright.setBounds(xcenter + GAP, y + (height 
-               - dright.height) / 2, dright.width, dright.height);
+         if( cright instanceof JButton )
+         {
+             cright.setBounds(xcenter + 120, y + (height 
+                     - dright.height) / 2, dright.width, dright.height);
+         }
+         else
+         {
+             cright.setBounds(xcenter + GAP, y + (height 
+                     - dright.height) / 2, dright.width, dright.height);
+         }
+         
+
          y += height;
       }
    }
