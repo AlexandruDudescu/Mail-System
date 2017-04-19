@@ -16,8 +16,8 @@ public class Account
 		emailName = name;
 		
 		// ----- For debbuging purpose only -----
-		EmailAddress localAddress1 = new EmailAddress("local.com");
-		EmailAddress remoteAddress1 = new EmailAddress("remote.com");
+		EmailAddress localAddress1 = new EmailAddress("local.com", this);
+		EmailAddress remoteAddress1 = new EmailAddress("remote.com", this);
 		
 		local.add(localAddress1);
 		remote.add(remoteAddress1);
@@ -47,6 +47,12 @@ public class Account
 	public ArrayList<EmailAddress> getRemoteAddresses()
 	{
 		return (ArrayList<EmailAddress>) remote.clone();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return emailName;
 	}
 	
 	private String emailName;

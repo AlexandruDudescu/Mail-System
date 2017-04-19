@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class GUIAccountTreeManager 
 {
@@ -24,7 +25,7 @@ public class GUIAccountTreeManager
 			  
 			//Get emailAddresses from the local branch
 			branchNode = new DefaultMutableTreeNode("local");
-			  
+			
 			for(EmailAddress emailAddress : local)
 			{
 				//Get emails for each folder
@@ -78,15 +79,15 @@ public class GUIAccountTreeManager
 		}
 		  
 	  }
-	  
-	  private static DefaultMutableTreeNode getEmailListNode(ArrayList<Email> folder, String name)
-	  {
+
+	private static DefaultMutableTreeNode getEmailListNode(ArrayList<Email> folder, String name)
+	{
 		  DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(name);
 		  DefaultMutableTreeNode emailNode = null;
 		  
 		  for(Email email : folder)
 		  {
-			emailNode = new DefaultMutableTreeNode(email.getSubject());
+			emailNode = new DefaultMutableTreeNode(email);
 			
 			if(emailNode != null)
 				folderNode.add(emailNode);
@@ -94,4 +95,75 @@ public class GUIAccountTreeManager
 		  
 		  return folderNode;
 	  }
+	
+	public static DefaultMutableTreeNode getNodeByEmail(String addressString, DefaultMutableTreeNode root)
+	{
+		String user;
+		String serverDomain;
+		
+		//Get user and server domain
+		String splitAddress[] = addressString.split("@");
+		
+		user = splitAddress[0];
+		serverDomain = splitAddress[1];
+		
+		//Parse the tree and find the node
+		DefaultMutableTreeNode accountNode = null;
+		
+		for(int i = 0; i < root.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
+			
+			if(n.getUserObject().toString().equals(user))
+			{
+				accountNode = n;
+				break;
+			}
+		}
+		
+		if(accountNode == null)
+			return null;
+		
+		boolean addressFound = false;
+		DefaultMutableTreeNode serverDomainNode = null;
+		
+		for(int branch = 0; branch < 2 && !addressFound; branch++)
+			for(int addressNumber = 0; addressNumber < accountNode.getChildAt(branch).getChildCount() && !addressFound; addressNumber++)
+			{
+				DefaultMutableTreeNode n = (DefaultMutableTreeNode) accountNode.getChildAt(branch).getChildAt(addressNumber);
+				
+				if(n.getUserObject().toString().equals(serverDomain))
+				{
+					serverDomainNode = n;
+					addressFound = true;
+				}
+			}
+		
+		return serverDomainNode;
+	}
+
+	public static void addEmailToNode(Object emailObject, DefaultMutableTreeNode serverDomainNode, DefaultTreeModel model, String folderName)
+	{		
+		for(int i = 0; i < serverDomainNode.getChildCount(); i++)
+		{
+			
+			DefaultMutableTreeNode n = (DefaultMutableTreeNode) serverDomainNode.getChildAt(i);
+			
+			if(n.getUserObject().toString().equals(folderName))
+			{
+				model.insertNodeInto(new DefaultMutableTreeNode(emailObject), n, n.getChildCount());
+			}
+		}
+	}
+
+	public static String getSelectedEmailBody(DefaultMutableTreeNode selectedNode)
+	{
+
+		if(selectedNode.getLevel() != 5)
+			return null;
+		
+		Email selectedEmail = (Email) selectedNode.getUserObject();
+		
+		return selectedEmail.getContent();
+	}
 }

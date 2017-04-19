@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class EmailAddress 
 {
+	private Account account;
 	private String serverDomain;
 	private ArrayList<Email> inbox;
 	private ArrayList<Email> sent;
@@ -34,13 +35,14 @@ public class EmailAddress
 		// --------------------------------------
 	}
 	
-	public EmailAddress(String serverDomain)
+	public EmailAddress(String serverDomain, Account account)
 	{
 		inbox = new ArrayList<Email>();
 		sent = new ArrayList<Email>();
 		trash = new ArrayList<Email>();
 		
 		this.serverDomain = serverDomain;
+		this.account = account;
 		
 		// ----- For debbuging purpose only -----
 		Email inboxEmail = new Email();
@@ -54,8 +56,11 @@ public class EmailAddress
 		inbox.add(inboxEmail);
 		sent.add(sentEmail);
 		trash.add(trashEmail);
+		
 		// --------------------------------------
 	}
+	
+	public Account getAccount() {return account;} 
 	
 	public String getServerDomain() { return serverDomain; }
 	public void setServerDomain(String serverDomain) { this.serverDomain = serverDomain; }

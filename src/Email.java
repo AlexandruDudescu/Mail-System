@@ -74,4 +74,21 @@ public class Email
 	{
 		return subject;
 	}
+	
+	public String getContent()
+	{
+		String email = "";
+		
+		String destinationAddressString = destinationAddress.getAccount().toString() + "@" + destinationAddress.getServerDomain();
+		String senderAddressString = senderAddress.getAccount().toString() + "@" + senderAddress.getServerDomain();
+		
+		email += "To: " + destinationAddressString + "\n";
+		email += "From: " + senderAddressString + "\n\n";
+		
+		email += "Subject: " + this.subject + "\n\n";
+		
+		email += this.body;
+		
+		return email;
+	}
 }
