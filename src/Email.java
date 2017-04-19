@@ -69,5 +69,9 @@ public class Email
 		this.body = body;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return subject;
+	}
 }
