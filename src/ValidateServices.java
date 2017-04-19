@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Class to validate the inputs of the user.
  * @author Reed Schoon
@@ -12,7 +14,7 @@ public class ValidateServices
 	 * @param account
 	 * @return true if account is unique, false if account is not unique
 	 */
-	public boolean ValidateAccount( String account )
+	public static boolean ValidateAccount( String account )
 	{
 		return true;
 	}
@@ -23,8 +25,15 @@ public class ValidateServices
 	 * @param account
 	 * @return true if account is unique, false if account is not unique
 	 */	
-	public boolean ValidateUsername( String username ) 
+	public static boolean ValidateUsername( ArrayList<Account> accountClone, String username ) 
 	{
+		for( int i = 0; i < accountClone.size(); i++ )
+		{
+			if( accountClone.get(i).getEmailName().equals(username) )
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 	

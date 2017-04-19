@@ -17,9 +17,9 @@ public class AccountManager
 		accounts = new ArrayList<Account>();
 		
 		// ----- For debbuging purpose only -----
-		Account account1 = new Account("Kevin	");
-		Account account2 = new Account("Reed	");
-		Account account3 = new Account("Alex	");
+		Account account1 = new Account("Kevin");
+		Account account2 = new Account("Reed");
+		Account account3 = new Account("Alex");
 		
 		accounts.add(account1);
 		accounts.add(account2);
@@ -30,6 +30,31 @@ public class AccountManager
 	public static ArrayList<Account> getAccountList()
 	{
 		return (ArrayList<Account>) accounts.clone();
+	}
+	
+	public static boolean CreateAccount(String name)
+	{
+		if( ValidateServices.ValidateUsername( getAccountList(), name) )
+		{
+			Account newAccount = new Account(name);
+			accounts.add(newAccount);
+			return true;	
+		}
+		return false;
+	}
+	
+	public static boolean DeleteAccount(String name)
+	{
+		int i = 0;
+		for( i = 0; i < accounts.size(); i++ )
+		{
+			if( accounts.get(i).getEmailName().equals(name) )
+			{
+				accounts.remove(i);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void CreateUser(Account newAccount)
