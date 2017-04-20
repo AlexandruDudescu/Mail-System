@@ -269,6 +269,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 										accountMenuFrame.dispose();
 										accountMenuFrame = null;
 										
+										//Debug -- outputs a list of all accounts
+										System.out.println("------------------------------------");
 										for( int i = 0; i < AccountManager.getAccountList().size(); i++ )
 										{
 											AccountManager.getAccountList().get(i).getLocalAddresses();

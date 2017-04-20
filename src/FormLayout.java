@@ -58,7 +58,7 @@ public class FormLayout implements LayoutManager
 
          if( cright instanceof JButton )
          {
-             cright.setBounds(xcenter + 120, y + (height 
+             cright.setBounds(xcenter + 110, y + (height 
                      - dright.height) / 2, dright.width, dright.height);
          }
          else
