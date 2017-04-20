@@ -16,42 +16,19 @@ public class Account
 		emailName = name;
 	}
 	
-	public String getEmailName()
-	{
-		return emailName;
-	}
+	//Getters and setters
+	public String getEmailName() { return emailName; }
+	public void AddLocalAddress(EmailAddress newAddres) { local.add(newAddres); }
 	
-	public void AddLocalAddress(EmailAddress newAddres)
-	{
-		local.add(newAddres);
-	}
+	public void AddRemoteAddress(EmailAddress remoteAddress) { remote.add(remoteAddress); }
+	public void RemoveLocalAddress(int index) { local.remove(index); }
 	
-	public void AddRemoteAddress(EmailAddress remoteAddress)
-	{
-		remote.add(remoteAddress);
-	}
-	
-	public void RemoveLocalAddress(int index)
-	{
-		local.remove(index);
-	}
-	
-	public void RemoveRemoteAddress(int index)
-	{
-		remote.remove(index);
-	}
+	public void RemoveRemoteAddress(int index) { remote.remove(index); }
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<EmailAddress> getLocalAddresses()
-	{
-		return (ArrayList<EmailAddress>) local.clone();
-	}
-	
+	public ArrayList<EmailAddress> getLocalAddresses() { return (ArrayList<EmailAddress>) local.clone(); }
 	@SuppressWarnings("unchecked")
-	public ArrayList<EmailAddress> getRemoteAddresses()
-	{
-		return (ArrayList<EmailAddress>) remote.clone();
-	}
+	public ArrayList<EmailAddress> getRemoteAddresses() { return (ArrayList<EmailAddress>) remote.clone(); }
 	
 	@Override
 	public String toString()

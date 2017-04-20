@@ -9,8 +9,6 @@ import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-//import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -37,12 +35,12 @@ import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Main GUI class
- * @author Reed Schoon
- *
+ * @author Reed Schoon, Kevin Wang, Alexandru Dudescu
  */
 @SuppressWarnings("serial")
 public class GUI extends JComponent implements TreeSelectionListener 
 {
+	
 //Menu variables
 	JMenuBar menuBar = null;
 	JMenu accountsMenu = null;
@@ -51,19 +49,27 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JMenuItem removeAccount = null;
 	JMenuItem addUser = null;
 	JMenuItem removeUser = null;
+	
+	
 //Frame variables
 	JFrame frame = new JFrame("Simple Email - Team Void");
 	JFrame composeFrame = null;
 	JFrame replyFrame = null;
 	JFrame accountMenuFrame = null;
 	JFrame userMenuFrame = null;
+	
+	
 //Panel variables	
 	JPanel buttonPanel = new JPanel();
 	JPanel textPanel = new JPanel();
-	JPanel labelPanel = new JPanel();	
+	JPanel labelPanel = new JPanel();
+	
+	
 //Radio Button variables
 	JRadioButton accountMenuLocalRadio;
 	JRadioButton accountMenuRemoteRadio;
+	
+	
 //Button variables	
 	JButton accountMenuButton = null;
 	JButton userMenuButton = null;
@@ -71,6 +77,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JButton replyButton = new JButton("Reply");
 	JButton sendButton = new JButton ("Send");
 	JButton removeButton = new JButton("Remove");
+	
+	
 //Text Field variables
 	JTextField accountMenuTextField = new JTextField(30);
 	JTextField accountMenuTextField02 = new JTextField(30);
@@ -78,9 +86,13 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JTextField fromTextField = new JTextField(30);
 	JTextField toTextField = new JTextField(30);
 	JTextField subjectTextField = new JTextField(30);
+	
+	
 //Text Area variables
 	JTextArea screen = new JTextArea(10, 10);
     JTextArea bodyTextArea = new JTextArea(10,30);
+    
+    
 //Tree & Scroll Pane variables
 	JTree tree;
 	JScrollPane treeView;
@@ -108,6 +120,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		userMenu.add(addUser);
 		userMenu.add(removeUser);
 		
+		
 		//Button panel code
 		buttonPanel.setLayout(new GridLayout(1, 2));
 		buttonPanel.add(composeButton);
@@ -118,6 +131,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		sendButton.setEnabled(false);
 		removeButton.setEnabled(false);
 		replyButton.setEnabled(false);
+		
 		
 		//Grid code
 		GridLayout gridLayout = new GridLayout(1, 2, 50, 50);
@@ -134,6 +148,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		
 		bodyTextArea.setLineWrap(true);
 		
+		
 		//Menu functionality
 		addAccount.addActionListener(new ActionListener()
 		{
@@ -146,9 +161,13 @@ public class GUI extends JComponent implements TreeSelectionListener
 					accountMenuLocalRadio = new JRadioButton("Local");
 					accountMenuRemoteRadio = new JRadioButton("Remote");
 					ButtonGroup radioButtonGroup = new ButtonGroup();
+					
+					
 					radioButtonGroup.add(accountMenuLocalRadio);
 					radioButtonGroup.add(accountMenuRemoteRadio);
+					
 					accountMenuLocalRadio.setSelected(true);
+					
 					accountMenuFrame.setLayout(new FormLayout());
 					accountMenuFrame.add(new JLabel("User Name:"));
 					accountMenuFrame.add(accountMenuTextField);
@@ -161,6 +180,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 					accountMenuFrame.add(new JLabel(""));
 					accountMenuFrame.add(accountMenuButton);
 					accountMenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+					
 					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 					accountMenuFrame.setResizable(false);
 					accountMenuFrame.pack();
@@ -771,7 +791,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 			        	 }
 			        	if(commaCount == 3)
 			        	{
-				        	 String b = new String(tempArray);
+				        	 //String b = new String(tempArray);
 				        	 //System.out.println(b);
 			         		 //senderField.setServerDomain(b);
 			        	}		           

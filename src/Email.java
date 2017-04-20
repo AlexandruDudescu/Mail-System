@@ -28,53 +28,27 @@ public class Email
 		this.timeStamp = timeStamp;
 	}
 	
-	public EmailAddress getDestinationAddress() 
-	{
-		return destinationAddress;
-	}
-	public void setDestinationAddress(EmailAddress destinationAddress) 
-	{
-		this.destinationAddress = destinationAddress;
-	}
-	public String getSubject() 
-	{
-		return subject;
-	}
-	public void setSubject(String subject) 
-	{
-		this.subject = subject;
-	}
-	public EmailAddress getSenderAddress() 
-	{
-		return senderAddress;
-	}
-	public void setSenderAddress(EmailAddress senderAddress) 
-	{
-		this.senderAddress = senderAddress;
-	}
-	public Date getTimeStamp() 
-	{
-		return timeStamp;
-	}
-	public void setTimeStamp(Date timeStamp) 
-	{
-		this.timeStamp = timeStamp;
-	}
-	public String getBody() 
-	{
-		return body;
-	}
-	public void setBody(String body) 
-	{
-		this.body = body;
-	}
+	public EmailAddress getDestinationAddress() { return destinationAddress; }
+	public void setDestinationAddress(EmailAddress destinationAddress) { this.destinationAddress = destinationAddress; }
+	
+	public String getSubject() { return subject; }
+	public void setSubject(String subject) { this.subject = subject; }
+	
+	public EmailAddress getSenderAddress() { return senderAddress; }
+	public void setSenderAddress(EmailAddress senderAddress) { this.senderAddress = senderAddress; }
+	
+	public Date getTimeStamp() { return timeStamp; }
+	public void setTimeStamp(Date timeStamp) { this.timeStamp = timeStamp; }
+	
+	public String getBody() { return body; }
+	public void setBody(String body) { this.body = body; }
 	
 	@Override
-	public String toString()
-	{
-		return subject;
-	}
+	public String toString() { return subject; }
 	
+	/**
+	 * Creates and returns a string with the content of the email
+	 */
 	public String getContent()
 	{
 		String email = "";

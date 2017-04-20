@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Controller class to handle the Accounts in the system
@@ -22,6 +21,11 @@ public class AccountManager
 		return (ArrayList<Account>) accounts.clone();
 	}
 	
+	/**
+	 * Create a new account with the specified name
+	 * @param name The name of the account to be created
+	 * @return true for a successful operation, false otherwise
+	 */
 	public static boolean CreateAccount(String name)
 	{
 		if( ValidateServices.ValidateUsername( getAccountList(), name) )
@@ -33,6 +37,11 @@ public class AccountManager
 		return false;
 	}
 	
+	/**
+	 * Deletes the account with the specified name
+	 * @param name of the account to be deleted
+	 * @return true for a successful operation, false otherwise
+	 */
 	public static boolean DeleteAccount(String name)
 	{
 		for( int i = 0; i < accounts.size(); i++ )
@@ -46,6 +55,13 @@ public class AccountManager
 		return false;
 	}
 	
+	/**
+	 * Adds a server domain using the provided name to an already existing account.
+	 * @param userName the username of the account
+	 * @param serverName the name of the sever to be added
+	 * @param isLocal specifies the branch to put the server domain on
+	 * @return
+	 */
 	public static boolean CreateServer(String userName, String serverName, boolean isLocal)
 	{
 		if( ValidateServices.ValidateServer( getAccountList(), userName, serverName ) )
@@ -80,6 +96,12 @@ public class AccountManager
 		return false;
 	}
 	
+	/**
+	 * Removes a server domain from a specified account.
+	 * @param userName the username of the account
+	 * @param serverName the name of the server domain to be removed
+	 * @return
+	 */
 	public static boolean DeleteServer(String userName, String serverName)
 	{
 		int i = 0;
@@ -122,10 +144,6 @@ public class AccountManager
 		
 		return false; //only get here if the two for loops didn't return true
 	}
-	
-	public void Login(Account currentAccount)
-	{
-		
-	}
+
 
 }

@@ -23,6 +23,11 @@ public class EmailManager
 		return newEmail;
 	}
 	
+	/**
+	 * Function that simulates sending an email. Sender and Recipient
+	 * information are included in the email object
+	 * @param email Email object to be sent
+	 */
 	public static void sendEmail(Email email)
 	{
 		ArrayList<Email> destinationInbox = email.getDestinationAddress().getInbox();
@@ -36,6 +41,10 @@ public class EmailManager
 		email.getSenderAddress().setSent(senderSend);
 	}
 	
+	/** 
+	 * Function to delete an email existing in the system.
+	 * @param email The email to be deleted
+	 */
 	public static void deleteEmail(Email email)
 	{
 		ArrayList<Email> inbox = email.getDestinationAddress().getInbox();

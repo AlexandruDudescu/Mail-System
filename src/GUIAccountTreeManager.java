@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-
 
 /**
  * Collection of functions to manage and interact with the tree view.
@@ -11,30 +8,6 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class GUIAccountTreeManager 
 {
-
-	/**
-	 * Creates a folder node with the specified name and populates it with the 
-	 * Email provided in the folder ArrayList
-	 * @param folder ArrayList containing the Email objects
-	 * @param name The name of the node to be created
-	 * @return The created node
-	 */
-	private static DefaultMutableTreeNode populateEmailFolder(ArrayList<Email> folder, String name)
-	{
-		  DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(name);
-		  DefaultMutableTreeNode emailNode = null;
-		  
-		  for(Email email : folder)
-		  {
-			emailNode = new DefaultMutableTreeNode(email);
-			
-			if(emailNode != null)
-				folderNode.add(emailNode);
-		  }
-		  
-		  return folderNode;
-	  }
-	
 	/**
 	 * Search for a child node by its name in the parent nodes. If fount returns the name,
 	 * null otherwise.
