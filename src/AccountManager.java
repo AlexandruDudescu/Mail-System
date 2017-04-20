@@ -69,6 +69,12 @@ public class AccountManager
 					break;
 				}
 			}
+			
+			if( i == accounts.size() )
+			{
+				return false;
+			}
+			
 			if( isLocal )
 			{
 				EmailAddress newAddress = new EmailAddress(serverName, accounts.get(i));
@@ -94,6 +100,10 @@ public class AccountManager
 			{
 				break;
 			}
+		}
+		if( i == accounts.size() )
+		{
+			return false;
 		}
 		if( accounts.get(i).getEmailName().equals(userName) ) //make sure the for loop found the specified user
 		{
