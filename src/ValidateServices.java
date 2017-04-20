@@ -23,7 +23,11 @@ public class ValidateServices
 			{
 				break;
 			}
-		}		
+		}
+		if( i == accountClone.size() )
+		{
+			return true;
+		}
 		
 		//find the address to send the email to
 		for( int k = 0; k < accountClone.get(i).getLocalAddresses().size(); k++ )
