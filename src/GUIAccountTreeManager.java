@@ -177,12 +177,24 @@ public class GUIAccountTreeManager
 		return serverDomainNode;
 	}
 
+	/**
+	 * Adds an email object as a node to the specified serverDomainNode
+	 * @param emailObject the email object
+	 * @param serverDomainNode the server domain node
+	 * @param model tree view model
+	 * @param folderName the name of the folder the email should belong to
+	 */
 	public static void addEmailToNode(Object emailObject, DefaultMutableTreeNode serverDomainNode, DefaultTreeModel model, String folderName)
 	{	
 		DefaultMutableTreeNode folderNode = searchChildByName(folderName, serverDomainNode);
 		model.insertNodeInto(new DefaultMutableTreeNode(emailObject), folderNode, folderNode.getChildCount());
 	}
 
+	/**
+	 * Check to see if the selected node it's an email and retrieve its contents.
+	 * @param selectedNode
+	 * @return
+	 */
 	public static String getSelectedEmailContent(DefaultMutableTreeNode selectedNode)
 	{
 
@@ -210,6 +222,11 @@ public class GUIAccountTreeManager
 
 	}
 	
+	/**
+	 * Creates and returns a domain server node with the specified name
+	 * @param newEmailAddressName
+	 * @return
+	 */
 	public static DefaultMutableTreeNode createEmailAddressNode(String newEmailAddressName)
 	{
 		//Create the new addres node
@@ -222,6 +239,12 @@ public class GUIAccountTreeManager
 		return newEmailAddress;
 	}
 	
+	/**
+	 * Removes the specified email address from the specified accountBranch
+	 * @param emailAddress name of the email address to be removed
+	 * @param accountBranch the account branch to remove the address from
+	 * @param model tree view of the model
+	 */
 	public static void removeEmailAddressFromNode(String emailAddress, DefaultMutableTreeNode accountBranch, DefaultTreeModel model)
 	{
 		DefaultMutableTreeNode emailNode = searchChildByName(emailAddress, accountBranch);
@@ -229,6 +252,12 @@ public class GUIAccountTreeManager
 
 	}
 
+	/**
+	 * Creates the structure for an account node, attributes it the specified account name
+	 * and returns it.
+	 * @param accountName
+	 * @return
+	 */
 	public static DefaultMutableTreeNode createNewAccountNode(String accountName)
 	{
 		DefaultMutableTreeNode newAccount = new DefaultMutableTreeNode(accountName);
