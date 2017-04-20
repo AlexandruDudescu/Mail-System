@@ -291,17 +291,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 						}
 					});
 				}
-				
-				
-				
-				if( accountMenuFrame != null )
-				{
-					if( !accountMenuTextField.getText().isEmpty() && !accountMenuTextField02.getText().isEmpty() )
-					{
-						DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
-						GUIAccountTreeManager.removeEmailAddressFromNode(accountMenuTextField02.getText(), AccountBranchNode);
-					}
-				}
 			}
 		});
 		
