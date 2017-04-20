@@ -77,7 +77,7 @@ Manager</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
-User logs in</panel_attributes>
+Delete user option is selected</panel_attributes>
     <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
   </element>
   <element>
@@ -111,7 +111,7 @@ User logs in</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
-Delete user option is selected</panel_attributes>
+User types in user to be deleted</panel_attributes>
     <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
   </element>
   <element>

@@ -157,7 +157,7 @@ Manager</panel_attributes>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-m1= User is asked is they're certain</panel_attributes>
+m1= User is asked if they're certain</panel_attributes>
     <additional_attributes>50.0;40.0;70.0;40.0;70.0;10.0;10.0;10.0;10.0;80.0;40.0;80.0;40.0;60.0</additional_attributes>
   </element>
   <element>
@@ -187,11 +187,11 @@ m1= User is asked is they're certain</panel_attributes>
     <coordinates>
       <x>610</x>
       <y>350</y>
-      <w>250</w>
+      <w>260</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-m1= Email is permantly deleted</panel_attributes>
+m1= Email is permanently deleted</panel_attributes>
     <additional_attributes>50.0;40.0;70.0;40.0;70.0;10.0;10.0;10.0;10.0;80.0;40.0;80.0;40.0;50.0</additional_attributes>
   </element>
   <element>
