@@ -683,10 +683,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 					EmailManager.sendEmail(newEmail);
 					System.out.println( "After To size: " + toEmailAddress.getInbox().size() );
 					System.out.println( "After From size: " + senderEmailAddress.getSent().size());
-					//Debug - outputs To, Subject, and Body
-			        System.out.println(toTextField.getText());
-			        System.out.println(subjectTextField.getText());
-			        System.out.println(bodyTextArea.getText());
 			        
 			        //GUI logic
 			        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
@@ -726,6 +722,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 				}
 				
 				GUIAccountTreeManager.DeleteEmail(currentlySelectedNode, model);
+				screen.setText(""); 
+				removeButton.setEnabled(false);
 			}
 		});
 		
