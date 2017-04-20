@@ -46,8 +46,7 @@ public class AccountManager
 	
 	public static boolean DeleteAccount(String name)
 	{
-		int i = 0;
-		for( i = 0; i < accounts.size(); i++ )
+		for( int i = 0; i < accounts.size(); i++ )
 		{
 			if( accounts.get(i).getEmailName().equals(name) )
 			{
@@ -60,38 +59,69 @@ public class AccountManager
 	
 	public static boolean CreateServer(String userName, String serverName, boolean isLocal)
 	{
-		if( ValidateServices.ValidateServer( getAccountList(), userName, serverName) )
+		if( ValidateServices.ValidateServer( getAccountList(), userName, serverName ) )
 		{
-			//TODO: add functionality
+			int i = 0;
+			for( i = 0; i < accounts.size(); i++ )
+			{
+				if( accounts.get(i).getEmailName().equals(userName) )
+				{
+					break;
+				}
+			}
+			if( isLocal )
+			{
+				EmailAddress newAddress = new EmailAddress(serverName, accounts.get(i));
+				accounts.get(i).AddLocalAddress(newAddress);
+			}
+			else
+			{
+				EmailAddress newAddress = new EmailAddress(serverName, accounts.get(i));
+				accounts.get(i).AddRemoteAddress(newAddress);					
+			}
+			
 			return true;	
 		}
 		return false;
 	}
 	
-	public void CreateUser(Account newAccount)
+	public static boolean DeleteServer(String userName, String serverName)
 	{
-		System.out.println("Press 1 to add to local address\n");
-		System.out.println("Press 2 to add to remote address\n");
+		int i = 0;
+		for( i = 0; i < accounts.size(); i++ )
+		{
+			if( accounts.get(i).getEmailName().equals(userName) )
+			{
+				break;
+			}
+		}
+		if( accounts.get(i).getEmailName().equals(userName) ) //make sure the for loop found the specified user
+		{
+			//search for the specified serverName in the local
+			for( int k = 0; k < accounts.get(i).getLocalAddresses().size(); k++ )
+			{
+				if( serverName.equals(accounts.get(i).getLocalAddresses().get(k).getServerDomain()) )
+				{
+					accounts.get(i).RemoveLocalAddress(k);
+					return true;
+				}
+			}
+			//if not in local, search remote
+			for( int k = 0; k < accounts.get(i).getRemoteAddresses().size(); k++ )
+			{
+				if( serverName.equals(accounts.get(i).getRemoteAddresses().get(k).getServerDomain()) )
+				{
+					accounts.get(i).RemoveRemoteAddress(k);
+					return true;
+				}
+			}					
+		}
+		else //if not, exit
+		{
+			return false;	
+		}
 		
-		sc = new Scanner(System.in);
-		int i = sc.nextInt();
-		if(i == 1)
-		{
-			//local.add(newAccount);
-		}
-		else if(i == 2)
-		{
-			//remote.add(newAccount);
-		}
-		else
-		{
-			System.out.println("Error. Please select 1 or 2\n");
-		}
-	}
-	
-	public void DeleteUser()
-	{
-		
+		return false; //only get here if the two for loops didn't return true
 	}
 	
 	public void Login(Account currentAccount)

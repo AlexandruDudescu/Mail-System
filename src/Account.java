@@ -39,11 +39,23 @@ public class Account
 		remote.add(remoteAddress);
 	}
 	
+	public void RemoveLocalAddress(int index)
+	{
+		local.remove(index);
+	}
+	
+	public void RemoveRemoteAddress(int index)
+	{
+		remote.remove(index);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public ArrayList<EmailAddress> getLocalAddresses()
 	{
 		return (ArrayList<EmailAddress>) local.clone();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ArrayList<EmailAddress> getRemoteAddresses()
 	{
 		return (ArrayList<EmailAddress>) remote.clone();

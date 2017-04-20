@@ -12,6 +12,7 @@ import java.awt.Dimension;
 //import java.awt.Font;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -54,6 +56,9 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JPanel buttonPanel = new JPanel();
 	JPanel textPanel = new JPanel();
 	JPanel labelPanel = new JPanel();	
+//Radio Button variables
+	JRadioButton accountMenuLocalRadio;
+	JRadioButton accountMenuRemoteRadio;
 //Button variables	
 	JButton accountMenuButton = null;
 	JButton userMenuButton = null;
@@ -104,6 +109,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		buttonPanel.add(sendButton);
 		buttonPanel.add(removeButton);
 		buttonPanel.setBackground(Color.lightGray);
+		sendButton.setEnabled(false);
 		
 		//Grid code
 		GridLayout gridLayout = new GridLayout(1, 2, 50, 50);
@@ -129,14 +135,25 @@ public class GUI extends JComponent implements TreeSelectionListener
 				{
 					accountMenuFrame = new JFrame("Add Account");
 					accountMenuButton = new JButton("Add");
+					accountMenuLocalRadio = new JRadioButton("Local");
+					accountMenuRemoteRadio = new JRadioButton("Remote");
+					ButtonGroup radioButtonGroup = new ButtonGroup();
+					radioButtonGroup.add(accountMenuLocalRadio);
+					radioButtonGroup.add(accountMenuRemoteRadio);
+					accountMenuLocalRadio.setSelected(true);
 					accountMenuFrame.setLayout(new FormLayout());
 					accountMenuFrame.add(new JLabel("User Name:"));
 					accountMenuFrame.add(accountMenuTextField);
 					accountMenuFrame.add(new JLabel("Email Server:"));
 					accountMenuFrame.add(accountMenuTextField02);
 					accountMenuFrame.add(new JLabel(""));
+					accountMenuFrame.add(accountMenuLocalRadio);
+					accountMenuFrame.add(new JLabel(""));
+					accountMenuFrame.add(accountMenuRemoteRadio);
+					accountMenuFrame.add(new JLabel(""));
 					accountMenuFrame.add(accountMenuButton);
-					accountMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					accountMenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 					accountMenuFrame.setResizable(false);
 					accountMenuFrame.pack();
 					accountMenuFrame.setVisible(true);
@@ -147,6 +164,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
 					    {
 					    	accountMenuTextField.setText("");
+					    	accountMenuTextField02.setText("");
 					    	accountMenuFrame.setVisible(false);
 					    	accountMenuFrame.dispose();
 					    	accountMenuFrame = null;
@@ -161,16 +179,27 @@ public class GUI extends JComponent implements TreeSelectionListener
 							{
 								if( !accountMenuTextField.getText().isEmpty() && !accountMenuTextField02.getText().isEmpty() )
 								{
-									if( AccountManager.CreateServer(accountMenuTextField.getText(), accountMenuTextField02.getText(), true ))
+									boolean isLocal;
+									if( accountMenuLocalRadio.isSelected() )
+									{
+										isLocal = true;
+									}
+									else //accountMenuRemoteRadio is selected
+									{
+										isLocal = false;
+									}
+									
+									if( AccountManager.CreateServer(accountMenuTextField.getText(), accountMenuTextField02.getText(), isLocal ))
 									{
 										//Update GUI 
 										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
 										model.insertNodeInto(GUIAccountTreeManager.createEmailAddressNode(accountMenuTextField02.getText()), AccountBranchNode, AccountBranchNode.getChildCount());
 										
 										accountMenuTextField.setText("");
+										accountMenuTextField02.setText("");
 										accountMenuFrame.setVisible(false);
 										accountMenuFrame.dispose();
-										accountMenuFrame = null;										
+										accountMenuFrame = null;
 									}
 									else
 									{
@@ -190,8 +219,78 @@ public class GUI extends JComponent implements TreeSelectionListener
 		{
 			public void actionPerformed(ActionEvent event)
 			{
-				//TODO: add menu button functionality
-				System.out.println("Test: Remove");
+				if( accountMenuFrame == null )
+				{
+					accountMenuFrame = new JFrame("Remove Account");
+					accountMenuButton = new JButton("Remove");
+					accountMenuFrame.setLayout(new FormLayout());
+					accountMenuFrame.add(new JLabel("User Name:"));
+					accountMenuFrame.add(accountMenuTextField);
+					accountMenuFrame.add(new JLabel("Email Server:"));
+					accountMenuFrame.add(accountMenuTextField02);
+					accountMenuFrame.add(new JLabel(""));
+					accountMenuFrame.add(accountMenuButton);
+					accountMenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
+					accountMenuFrame.setResizable(false);
+					accountMenuFrame.pack();
+					accountMenuFrame.setVisible(true);
+					accountMenuFrame.setAlwaysOnTop(true);
+					accountMenuFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+					{
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
+					    {
+					    	accountMenuTextField.setText("");
+					    	accountMenuTextField02.setText("");
+					    	accountMenuFrame.setVisible(false);
+					    	accountMenuFrame.dispose();
+					    	accountMenuFrame = null;
+					    }
+					});
+					
+					accountMenuButton.addActionListener(new ActionListener()
+					{
+						public void actionPerformed(ActionEvent event)
+						{
+							if( accountMenuFrame != null )
+							{
+								if( !accountMenuTextField.getText().isEmpty() && !accountMenuTextField02.getText().isEmpty() )
+								{
+									if( AccountManager.DeleteServer(accountMenuTextField.getText(), accountMenuTextField02.getText() ))
+									{
+										//Update GUI 
+										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
+										GUIAccountTreeManager.removeEmailAddressFromNode(accountMenuTextField02.getText(), AccountBranchNode);
+										
+										accountMenuTextField.setText("");
+										accountMenuTextField02.setText("");
+										accountMenuFrame.setVisible(false);
+										accountMenuFrame.dispose();
+										accountMenuFrame = null;
+										
+										for( int i = 0; i < AccountManager.getAccountList().size(); i++ )
+										{
+											AccountManager.getAccountList().get(i).getLocalAddresses();
+											for( int j = 0; j < AccountManager.getAccountList().get(i).getLocalAddresses().size(); j++ )
+											{
+												System.out.println(AccountManager.getAccountList().get(i).getLocalAddresses().get(j).getAccount() + "@" + AccountManager.getAccountList().get(i).getLocalAddresses().get(j).getServerDomain() );
+											}
+										}
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(userMenuFrame, 
+									            "Cannot find the specified account.", "Error", 
+									            JOptionPane.OK_OPTION);
+									}
+								}
+							}
+						}
+					});
+				}
+				
+				
 				
 				if( accountMenuFrame != null )
 				{
@@ -217,7 +316,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 					userMenuFrame.add(userMenuTextField);
 					userMenuFrame.add(new JLabel(""));
 					userMenuFrame.add(userMenuButton);
-					userMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					userMenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 					userMenuFrame.setResizable(false);
 					userMenuFrame.pack();
 					userMenuFrame.setVisible(true);
@@ -280,7 +380,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 					userMenuFrame.add(userMenuTextField);
 					userMenuFrame.add(new JLabel(""));
 					userMenuFrame.add(userMenuButton);
-					userMenuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+					userMenuFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
+					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 					userMenuFrame.setResizable(false);
 					userMenuFrame.pack();
 					userMenuFrame.setVisible(true);
@@ -290,6 +391,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 					    @Override
 					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
 					    {
+					    	userMenuTextField.setText("");
 					    	userMenuFrame.setVisible(false);
 					    	userMenuFrame.dispose();
 					    	userMenuFrame = null;
@@ -371,6 +473,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 				composeFrame.pack();
 				composeFrame.setVisible(true);
 				composeFrame.setAlwaysOnTop(true);
+				//enable the send button
+				sendButton.setEnabled(true);
 				//Prompt the user on close if text was written in any of the fields
 				composeFrame.addWindowListener(new java.awt.event.WindowAdapter() 
 				{
@@ -386,7 +490,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 					        {
 					        	composeFrame.setVisible(false);
 					        	composeFrame.dispose();
-					        	composeFrame = null;				        	
+					        	composeFrame = null;
+					        	sendButton.setEnabled(false);
 					        }
 				    	}
 				    	else
@@ -394,6 +499,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				        	composeFrame.setVisible(false);
 				        	composeFrame.dispose();
 				        	composeFrame = null;
+				        	sendButton.setEnabled(false);
 				    	}
 				    }
 				});
@@ -442,6 +548,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 				replyFrame.pack();
 				replyFrame.setVisible(true);
 				replyFrame.setAlwaysOnTop(true);
+				//enable the send button
+				sendButton.setEnabled(true);
 				//Prompt the user on close if text was written in any of the fields
 				replyFrame.addWindowListener(new java.awt.event.WindowAdapter() 
 				{
@@ -457,7 +565,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 					        {
 					        	replyFrame.setVisible(false);
 					        	replyFrame.dispose();
-					        	replyFrame = null;				        	
+					        	replyFrame = null;		
+					        	sendButton.setEnabled(false);
 					        }
 				    	}
 				    	else
@@ -465,6 +574,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				    		replyFrame.setVisible(false);
 				    		replyFrame.dispose();
 				    		replyFrame = null;
+				    		sendButton.setEnabled(false);
 				    	}
 				    }				    
 				});
@@ -478,13 +588,15 @@ public class GUI extends JComponent implements TreeSelectionListener
 				//check if a frame is open
 				if( composeFrame != null || replyFrame != null )
 				{
+					EmailAddress toEmailAddress = null;
+					EmailAddress senderEmailAddress = null;
 					ArrayList<Account> accountClone = AccountManager.getAccountList();
 					String[] toParts = toTextField.getText().split("@", 2);
 					String[] fromParts = fromTextField.getText().split("@", 2);
 					boolean hasFoundToName = false;
 					boolean hasFoundFromName = false;
-					int i = 0;
-					int j = 0;
+					int i = 0; //contains To user name index
+					int j = 0; //contains From user name index
 					for( i = 0; i < accountClone.size(); i++ )
 					{
 						if( accountClone.get(i).getEmailName().equals(toParts[0]) )
@@ -505,51 +617,113 @@ public class GUI extends JComponent implements TreeSelectionListener
 						}
 					}
 					
-					if( hasFoundToName == false || hasFoundFromName == false || ( !toParts[1].equals("local.com") && !toParts[1].equals("remote.com") ) )
+					if( hasFoundToName == false || hasFoundFromName == false )
+					{
+						JOptionPane.showMessageDialog(frame, 
+					            "Cannot find the specified user name.", "Error", 
+					            JOptionPane.OK_OPTION);
+						return;
+					}
+					
+					//find the address to send the email to
+					for( int k = 0; k < accountClone.get(i).getLocalAddresses().size(); k++ )
+					{
+						if( toParts[1].equals(accountClone.get(i).getLocalAddresses().get(k).getServerDomain()) )
+						{
+							System.out.println("3.1");
+							toEmailAddress = accountClone.get(i).getLocalAddresses().get(k);
+							break;
+						}
+					}
+					
+					//if not in local, search remote
+					if( toEmailAddress == null )
+					{
+						for( int k = 0; k < accountClone.get(i).getRemoteAddresses().size(); k++ )
+						{
+							if( toParts[1].equals(accountClone.get(i).getRemoteAddresses().get(k).getServerDomain()) )
+							{
+								System.out.println("3.2");
+								toEmailAddress = accountClone.get(i).getRemoteAddresses().get(k);
+								break;
+							}
+						}						
+					}
+					
+					//find the address to send the email from
+					for( int k = 0; k < accountClone.get(j).getLocalAddresses().size(); k++ )
+					{
+						if( fromParts[1].equals(accountClone.get(j).getLocalAddresses().get(k).getServerDomain()) )
+						{
+							System.out.println("4.1");
+							senderEmailAddress = accountClone.get(j).getLocalAddresses().get(k);
+							break;
+						}
+					}
+					
+					//if not in local, search remote
+					if( senderEmailAddress == null )
+					{
+						for( int k = 0; k < accountClone.get(j).getRemoteAddresses().size(); k++ )
+						{
+							if( fromParts[1].equals(accountClone.get(j).getRemoteAddresses().get(k).getServerDomain()) )
+							{
+								System.out.println("4.2");
+								senderEmailAddress = accountClone.get(j).getRemoteAddresses().get(k);
+								break;
+							}
+						}						
+					}
+					
+					if( toEmailAddress == null || senderEmailAddress == null )
 					{
 						JOptionPane.showMessageDialog(frame, 
 					            "Cannot find the specified email address.", "Error", 
 					            JOptionPane.OK_OPTION);
 						return;
 					}
-					//TODO: add dynamic check to make sure the server exists
-					//Right now, this deals only with the test cases "local.com" and "remote.com"
-					if( ( toParts[1].equals("local.com") || toParts[1].equals("remote.com") ) && (fromParts[1].equals("local.com") || fromParts[1].equals("remote.com") ) )
-					{
-						if( toParts[1].equals("local.com") )
-						{
-							toEmailAddress = accountClone.get(i).getLocalAddresses().get(0);
-						}
-						else //remote.com
-						{
-							toEmailAddress = accountClone.get(i).getRemoteAddresses().get(0);
-						}
-						
-						if( fromParts[1].equals("local.com") )
-						{
-							senderEmailAddress = accountClone.get(i).getLocalAddresses().get(0);
-						}
-						else //remote.com
-						{
-							senderEmailAddress = accountClone.get(i).getRemoteAddresses().get(0);
-						}
-						subjectString = subjectTextField.getText();
-						bodyString = bodyTextArea.getText();
-						now = new Date();
-						Email newEmail = EmailManager.CreateEmail(toEmailAddress, senderEmailAddress, subjectString, bodyString, now);
-						EmailManager.sendEmail(newEmail);
-				        System.out.println(toTextField.getText());
-				        System.out.println(subjectString);
-				        System.out.println(bodyString);
-				        
-				        //GUI logic
-				        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
-				        DefaultMutableTreeNode fromNode = GUIAccountTreeManager.getNodeByEmail(fromTextField.getText(), root);
-				        
-				        GUIAccountTreeManager.addEmailToNode(newEmail, toNode, model, "Inbox");
-				        GUIAccountTreeManager.addEmailToNode(newEmail, fromNode, model, "Sent");
-					}
+					
+					subjectString = subjectTextField.getText();
+					bodyString = bodyTextArea.getText();
+					now = new Date();
+					Email newEmail = EmailManager.CreateEmail(toEmailAddress, senderEmailAddress, subjectString, bodyString, now);
+					EmailManager.sendEmail(newEmail);
+			        System.out.println(toTextField.getText());
+			        System.out.println(subjectString);
+			        System.out.println(bodyString);
+			        
+			        //GUI logic
+			        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
+			        DefaultMutableTreeNode fromNode = GUIAccountTreeManager.getNodeByEmail(fromTextField.getText(), root);
+			        
+			        GUIAccountTreeManager.addEmailToNode(newEmail, toNode, model, "Inbox");
+			        GUIAccountTreeManager.addEmailToNode(newEmail, fromNode, model, "Sent");
+			        
+			        //Close the compose/reply windows
+			        if( composeFrame != null )
+			        {
+			        	composeFrame.setVisible(false);
+			        	composeFrame.dispose();
+			        	composeFrame = null;
+			        	sendButton.setEnabled(false);				        	
+			        }
+			        else if( replyFrame != null )
+			        {
+			        	replyFrame.setVisible(false);
+			        	replyFrame.dispose();
+			        	replyFrame = null;		
+			        	sendButton.setEnabled(false);				        	
+			        }
 				}
+			}
+		});
+		
+		removeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				//TODO: add functionality
+				System.out.println("Remove Button Pressed.");
 			}
 		});
 		
@@ -640,7 +814,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 			
 	}
 	
-	private EmailAddress toEmailAddress;
 	private EmailAddress senderEmailAddress;
 	private String subjectString;
 	private String bodyString;
