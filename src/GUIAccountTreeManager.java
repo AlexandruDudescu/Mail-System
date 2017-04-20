@@ -3,6 +3,12 @@ import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+
+/**
+ * Collection of functions to manage and interact with the tree view.
+ * @author Alexandru Dudescu
+ *
+ */
 public class GUIAccountTreeManager 
 {
 	public static void addUserDataToTree(DefaultMutableTreeNode root)
@@ -32,15 +38,15 @@ public class GUIAccountTreeManager
 				emailAddressNode = new DefaultMutableTreeNode(emailAddress.getServerDomain());
 				  
 				//Inbox
-				emailAddressFolder = getEmailListNode(emailAddress.getInbox(), "Inbox");
+				emailAddressFolder = populateEmailFolder(emailAddress.getInbox(), "Inbox");
 				emailAddressNode.add(emailAddressFolder);
 			  
 				//Sent
-				emailAddressFolder = getEmailListNode(emailAddress.getSent(), "Sent");
+				emailAddressFolder = populateEmailFolder(emailAddress.getSent(), "Sent");
 				emailAddressNode.add(emailAddressFolder);
 				  
 				//Trash
-				emailAddressFolder = getEmailListNode(emailAddress.getTrash(), "Trash");
+				emailAddressFolder = populateEmailFolder(emailAddress.getTrash(), "Trash");
 				emailAddressNode.add(emailAddressFolder);
 			  
 				if(emailAddressNode != null)
@@ -58,15 +64,15 @@ public class GUIAccountTreeManager
 				emailAddressNode = new DefaultMutableTreeNode(emailAddress.getServerDomain());
 				  
 				//Inbox
-				emailAddressFolder = getEmailListNode(emailAddress.getInbox(), "Inbox");
+				emailAddressFolder = populateEmailFolder(emailAddress.getInbox(), "Inbox");
 				emailAddressNode.add(emailAddressFolder);
 				
 				//Sent
-				emailAddressFolder = getEmailListNode(emailAddress.getSent(), "Sent");
+				emailAddressFolder = populateEmailFolder(emailAddress.getSent(), "Sent");
 				emailAddressNode.add(emailAddressFolder);
 				
 				//Trash
-				emailAddressFolder = getEmailListNode(emailAddress.getTrash(), "Trash");
+				emailAddressFolder = populateEmailFolder(emailAddress.getTrash(), "Trash");
 				emailAddressNode.add(emailAddressFolder);
 				
 				if(emailAddressNode != null)
@@ -80,7 +86,14 @@ public class GUIAccountTreeManager
 		  
 	  }
 
-	private static DefaultMutableTreeNode getEmailListNode(ArrayList<Email> folder, String name)
+	/**
+	 * Creates a folder node with the specified name and populates it with the 
+	 * Email provided in the folder ArrayList
+	 * @param folder ArrayList containing the Email objects
+	 * @param name The name of the node to be created
+	 * @return The created node
+	 */
+	private static DefaultMutableTreeNode populateEmailFolder(ArrayList<Email> folder, String name)
 	{
 		  DefaultMutableTreeNode folderNode = new DefaultMutableTreeNode(name);
 		  DefaultMutableTreeNode emailNode = null;
@@ -96,6 +109,39 @@ public class GUIAccountTreeManager
 		  return folderNode;
 	  }
 	
+	/**
+	 * Search for a child node by its name in the parent nodes. If fount returns the name,
+	 * null otherwise.
+	 * @param childName name of the child to be searched
+	 * @param parentNode the parent node
+	 * @return child node or null
+	 */
+	public static DefaultMutableTreeNode searchChildByName(String childName, DefaultMutableTreeNode parentNode)
+	{
+		
+		DefaultMutableTreeNode childNode = null;
+		
+		for(int i = 0; i < parentNode.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) parentNode.getChildAt(i);
+			
+			if(n.getUserObject().toString().equals(childName))
+			{
+				childNode = n;
+				break;
+			}
+		}
+		
+		return childNode;
+	}
+	
+	/**
+	 * Provided a full email address (Eg. "alex@local.com") searches the root node and returns
+	 * the node corresponding to the server domain.
+	 * @param addressString
+	 * @param root
+	 * @return
+	 */
 	public static DefaultMutableTreeNode getNodeByEmail(String addressString, DefaultMutableTreeNode root)
 	{
 		String user;
@@ -108,18 +154,7 @@ public class GUIAccountTreeManager
 		serverDomain = splitAddress[1];
 		
 		//Parse the tree and find the node
-		DefaultMutableTreeNode accountNode = null;
-		
-		for(int i = 0; i < root.getChildCount(); i++)
-		{
-			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
-			
-			if(n.getUserObject().toString().equals(user))
-			{
-				accountNode = n;
-				break;
-			}
-		}
+		DefaultMutableTreeNode accountNode = searchChildByName(user, root);
 		
 		if(accountNode == null)
 			return null;
@@ -143,20 +178,12 @@ public class GUIAccountTreeManager
 	}
 
 	public static void addEmailToNode(Object emailObject, DefaultMutableTreeNode serverDomainNode, DefaultTreeModel model, String folderName)
-	{		
-		for(int i = 0; i < serverDomainNode.getChildCount(); i++)
-		{
-			
-			DefaultMutableTreeNode n = (DefaultMutableTreeNode) serverDomainNode.getChildAt(i);
-			
-			if(n.getUserObject().toString().equals(folderName))
-			{
-				model.insertNodeInto(new DefaultMutableTreeNode(emailObject), n, n.getChildCount());
-			}
-		}
+	{	
+		DefaultMutableTreeNode folderNode = searchChildByName(folderName, serverDomainNode);
+		model.insertNodeInto(new DefaultMutableTreeNode(emailObject), folderNode, folderNode.getChildCount());
 	}
 
-	public static String getSelectedEmailBody(DefaultMutableTreeNode selectedNode)
+	public static String getSelectedEmailContent(DefaultMutableTreeNode selectedNode)
 	{
 
 		if(selectedNode.getLevel() != 5)
@@ -166,25 +193,19 @@ public class GUIAccountTreeManager
 		
 		return selectedEmail.getContent();
 	}
-
+	
+	/**
+	 * Searches the root node for the account named accountName. Returns the local or remote
+	 * branch of the account depending on the isLocal variable
+	 * @param accountName The name of the account to be searched
+	 * @param isLocal Specifies the required branch.
+	 * @param root The root node of the tree
+	 * @return Node containing local or remote branch of the account
+	 */
 	public static DefaultMutableTreeNode getNodeByAccountBranch(String accountName, boolean isLocal, DefaultMutableTreeNode root)
 	{
-		
-		//Search for the account
-		DefaultMutableTreeNode accountNode = null;
 
-		for(int i = 0; i < root.getChildCount(); i++)
-		{
-			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
-			
-			if(n.getUserObject().toString().equals(accountName))
-			{
-				accountNode = n;
-				break;
-			}
-		}
-		
-
+		DefaultMutableTreeNode accountNode = searchChildByName(accountName, root);
 		return (DefaultMutableTreeNode) accountNode.getChildAt((isLocal)? 0 : 1);
 
 	}
@@ -203,18 +224,7 @@ public class GUIAccountTreeManager
 	
 	public static void removeEmailAddressFromNode(String emailAddress, DefaultMutableTreeNode accountBranch)
 	{
-		DefaultMutableTreeNode emailNode = null;
-		
-		for(int i = 0; i < accountBranch.getChildCount(); i++)
-		{
-			DefaultMutableTreeNode child = (DefaultMutableTreeNode) accountBranch.getChildAt(i);
-			
-			if(child.getUserObject().equals(emailAddress))
-			{
-				emailNode = child;
-				break;
-			}
-		}
+		DefaultMutableTreeNode emailNode = searchChildByName(emailAddress, accountBranch);
 		
 		accountBranch.remove(emailNode);
 	}
@@ -230,21 +240,4 @@ public class GUIAccountTreeManager
 		return newAccount;
 	}
 
-	public static DefaultMutableTreeNode getAccountNode(String accountName, DefaultMutableTreeNode root)
-	{
-		DefaultMutableTreeNode accountNode = null;
-		
-		for(int i = 0; i < root.getChildCount(); i++)
-		{
-			DefaultMutableTreeNode n =  (DefaultMutableTreeNode) root.getChildAt(i);
-			
-			if(n.getUserObject().toString().equals(accountName))
-			{
-				accountNode = n;
-				break;
-			}
-		}
-		
-		return accountNode;
-	}
 }
