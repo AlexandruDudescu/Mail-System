@@ -723,6 +723,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				
 				GUIAccountTreeManager.DeleteEmail(currentlySelectedNode, model);
 				screen.setText(""); 
+				tree.clearSelection();
 				removeButton.setEnabled(false);
 			}
 		});
