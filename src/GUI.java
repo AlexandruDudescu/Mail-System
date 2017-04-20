@@ -399,7 +399,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 								{
 									if( AccountManager.DeleteAccount(userMenuTextField.getText()) )
 									{
-										DefaultMutableTreeNode accountToDelete = GUIAccountTreeManager.getAccountNode(userMenuTextField.getText(), root);
+										DefaultMutableTreeNode accountToDelete = GUIAccountTreeManager.searchChildByName(userMenuTextField.getText(), root);
 										model.removeNodeFromParent(accountToDelete);
 										
 										userMenuTextField.setText("");
