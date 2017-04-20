@@ -263,8 +263,8 @@ public class GUIAccountTreeManager
 		DefaultMutableTreeNode newAccount = new DefaultMutableTreeNode(accountName);
 		
 		//Generate accountStructure
-		newAccount.add(new DefaultMutableTreeNode("Local"));
-		newAccount.add(new DefaultMutableTreeNode("Remore"));
+		newAccount.add(new DefaultMutableTreeNode("local"));
+		newAccount.add(new DefaultMutableTreeNode("remote"));
 		
 		return newAccount;
 	}
