@@ -110,6 +110,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 		buttonPanel.add(removeButton);
 		buttonPanel.setBackground(Color.lightGray);
 		sendButton.setEnabled(false);
+		removeButton.setEnabled(false);
+		replyButton.setEnabled(false);
 		
 		//Grid code
 		GridLayout gridLayout = new GridLayout(1, 2, 50, 50);
@@ -516,59 +518,65 @@ public class GUI extends JComponent implements TreeSelectionListener
 					replyFrame.dispose();
 					replyFrame = null;
 				}
-				//clear text fields
-	        	fromTextField.setText("");
-	        	toTextField.setText("");
-	        	subjectTextField.setText("");
-	        	bodyTextArea.setText("");
-				
-	        	//create new frame
-				replyFrame = new JFrame("Reply Email");
-				replyFrame.setLayout(new FormLayout());
-				replyFrame.add(new JLabel("From:"));
-				replyFrame.add(fromTextField);
-				replyFrame.add(new JLabel("To:"));
-				replyFrame.add(toTextField);
-				replyFrame.add(new JLabel("Subject:"));
-				replyFrame.add(subjectTextField);
-				replyFrame.add(new JLabel(""));
-				replyFrame.add(bodyTextArea);
-				replyFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
-				replyFrame.setResizable(false);
-				replyFrame.pack();
-				replyFrame.setVisible(true);
-				replyFrame.setAlwaysOnTop(true);
-				//enable the send button
-				sendButton.setEnabled(true);
-				//Prompt the user on close if text was written in any of the fields
-				replyFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+				//Set fields
+				currentlySelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				if(currentlySelectedNode.getLevel() ==  5)
 				{
-				    @Override
-				    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
-				    {
-				    	if( !fromTextField.getText().isEmpty() || !toTextField.getText().isEmpty() || !subjectTextField.getText().isEmpty() || !bodyTextArea.getText().isEmpty() )
-				    	{
-					        if (JOptionPane.showConfirmDialog(replyFrame, 
-					            "Are you sure to close this window? Anything you've written won't be saved or sent.", "Close Confirmation", 
-					            JOptionPane.YES_NO_OPTION,
-					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
-					        {
-					        	replyFrame.setVisible(false);
-					        	replyFrame.dispose();
-					        	replyFrame = null;		
-					        	sendButton.setEnabled(false);
-					        }
-				    	}
-				    	else
-				    	{
-				    		replyFrame.setVisible(false);
-				    		replyFrame.dispose();
-				    		replyFrame = null;
-				    		sendButton.setEnabled(false);
-				    	}
-				    }				    
-				});
+					Email replyEmail = (Email)currentlySelectedNode.getUserObject();
+					
+		        	fromTextField.setText(replyEmail.getDestinationAddress().getAccount() + "@" + replyEmail.getDestinationAddress().getServerDomain());
+		        	toTextField.setText(replyEmail.getSenderAddress().getAccount() + "@" + replyEmail.getSenderAddress().getServerDomain());
+		        	subjectTextField.setText("Re: " + replyEmail.getSubject());
+		        	bodyTextArea.setText("");
+		        	
+		        	//create new frame
+					replyFrame = new JFrame("Reply Email");
+					replyFrame.setLayout(new FormLayout());
+					replyFrame.add(new JLabel("From:"));
+					replyFrame.add(fromTextField);
+					replyFrame.add(new JLabel("To:"));
+					replyFrame.add(toTextField);
+					replyFrame.add(new JLabel("Subject:"));
+					replyFrame.add(subjectTextField);
+					replyFrame.add(new JLabel(""));
+					replyFrame.add(bodyTextArea);
+					replyFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
+					replyFrame.setResizable(false);
+					replyFrame.pack();
+					replyFrame.setVisible(true);
+					replyFrame.setAlwaysOnTop(true);
+					//enable the send button
+					sendButton.setEnabled(true);
+					//Prompt the user on close if text was written in any of the fields
+					replyFrame.addWindowListener(new java.awt.event.WindowAdapter() 
+					{
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) 
+					    {
+					    	if( !fromTextField.getText().isEmpty() || !toTextField.getText().isEmpty() || !subjectTextField.getText().isEmpty() || !bodyTextArea.getText().isEmpty() )
+					    	{
+						        if (JOptionPane.showConfirmDialog(replyFrame, 
+						            "Are you sure to close this window? Anything you've written won't be saved or sent.", "Close Confirmation", 
+						            JOptionPane.YES_NO_OPTION,
+						            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
+						        {
+						        	replyFrame.setVisible(false);
+						        	replyFrame.dispose();
+						        	replyFrame = null;		
+						        	sendButton.setEnabled(false);
+						        }
+					    	}
+					    	else
+					    	{
+					    		replyFrame.setVisible(false);
+					    		replyFrame.dispose();
+					    		replyFrame = null;
+					    		sendButton.setEnabled(false);
+					    	}
+					    }				    
+					});
+				}
 			}
 		});
 		
@@ -593,7 +601,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 						if( accountClone.get(i).getEmailName().equals(toParts[0]) )
 						{
 							hasFoundToName = true;
-							System.out.println("1");
 							break;
 						}
 					}
@@ -603,7 +610,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 						if( accountClone.get(j).getEmailName().equals(fromParts[0]) )
 						{
 							hasFoundFromName = true;
-							System.out.println("2");
 							break;
 						}
 					}
@@ -621,7 +627,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 					{
 						if( toParts[1].equals(accountClone.get(i).getLocalAddresses().get(k).getServerDomain()) )
 						{
-							System.out.println("3.1");
 							toEmailAddress = accountClone.get(i).getLocalAddresses().get(k);
 							break;
 						}
@@ -634,7 +639,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 						{
 							if( toParts[1].equals(accountClone.get(i).getRemoteAddresses().get(k).getServerDomain()) )
 							{
-								System.out.println("3.2");
 								toEmailAddress = accountClone.get(i).getRemoteAddresses().get(k);
 								break;
 							}
@@ -646,7 +650,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 					{
 						if( fromParts[1].equals(accountClone.get(j).getLocalAddresses().get(k).getServerDomain()) )
 						{
-							System.out.println("4.1");
 							senderEmailAddress = accountClone.get(j).getLocalAddresses().get(k);
 							break;
 						}
@@ -659,7 +662,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 						{
 							if( fromParts[1].equals(accountClone.get(j).getRemoteAddresses().get(k).getServerDomain()) )
 							{
-								System.out.println("4.2");
 								senderEmailAddress = accountClone.get(j).getRemoteAddresses().get(k);
 								break;
 							}
@@ -674,14 +676,17 @@ public class GUI extends JComponent implements TreeSelectionListener
 						return;
 					}
 					
-					subjectString = subjectTextField.getText();
-					bodyString = bodyTextArea.getText();
 					now = new Date();
-					Email newEmail = EmailManager.CreateEmail(toEmailAddress, senderEmailAddress, subjectString, bodyString, now);
+					System.out.println( "Before To size: " + toEmailAddress.getInbox().size() );
+					System.out.println( "Before From size: " + senderEmailAddress.getSent().size());
+					Email newEmail = EmailManager.CreateEmail(toEmailAddress, senderEmailAddress, subjectTextField.getText(), bodyTextArea.getText(), now);
 					EmailManager.sendEmail(newEmail);
+					System.out.println( "After To size: " + toEmailAddress.getInbox().size() );
+					System.out.println( "After From size: " + senderEmailAddress.getSent().size());
+					//Debug - outputs To, Subject, and Body
 			        System.out.println(toTextField.getText());
-			        System.out.println(subjectString);
-			        System.out.println(bodyString);
+			        System.out.println(subjectTextField.getText());
+			        System.out.println(bodyTextArea.getText());
 			        
 			        //GUI logic
 			        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
@@ -713,8 +718,12 @@ public class GUI extends JComponent implements TreeSelectionListener
 		{
 			public void actionPerformed(ActionEvent event)
 			{
-				//TODO: add functionality
-				System.out.println("Remove Button Pressed.");
+				currentlySelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				if(currentlySelectedNode.getLevel() ==  5)
+				{
+					Email removeEmail = (Email)currentlySelectedNode.getUserObject();
+					EmailManager.deleteEmail(removeEmail);
+				}
 			}
 		});
 		
@@ -756,7 +765,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 			        	if(commaCount == 3)
 			        	{
 				        	 String b = new String(tempArray);
-				        	 System.out.println(b);
+				        	 //System.out.println(b);
 			         		 //senderField.setServerDomain(b);
 			        	}		           
 			         }
@@ -799,13 +808,30 @@ public class GUI extends JComponent implements TreeSelectionListener
 	public void valueChanged(TreeSelectionEvent arg0) 
 	{
 		currentlySelectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		if( currentlySelectedNode == null ) //fixed an exception where the user selected an email, then deleted the account with the email
+		{
+			return;
+		}
 		
 		if(currentlySelectedNode.getLevel() ==  5)
+		{
+			if( currentlySelectedNode.getParent().toString().equals("Inbox"))
+			{
+				replyButton.setEnabled(true);
+				removeButton.setEnabled(true);
+			}
+			else if( currentlySelectedNode.getParent().toString().equals("Trash")) 
+			{
+				removeButton.setEnabled(true);
+			}
+			
 			screen.setText(((Email) currentlySelectedNode.getUserObject()).getContent()); 
+		}
+		else
+		{
+			removeButton.setEnabled(false);
+			replyButton.setEnabled(false);
+		}
 			
 	}
-	
-	private EmailAddress senderEmailAddress;
-	private String subjectString;
-	private String bodyString;
 }

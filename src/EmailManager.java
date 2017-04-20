@@ -30,9 +30,13 @@ public class EmailManager
 		
 		destinationInbox.add(email);
 		senderSend.add(email);
+		
+		//destinationInbox/senderSend won't update unless this happens
+		email.getDestinationAddress().setInbox(destinationInbox);
+		email.getSenderAddress().setSent(senderSend);
 	}
 	
-	public void deleteEmail(Email email)
+	public static void deleteEmail(Email email)
 	{
 		ArrayList<Email> inbox = email.getDestinationAddress().getInbox();
 		ArrayList<Email> trash = email.getDestinationAddress().getTrash();
@@ -41,11 +45,18 @@ public class EmailManager
 		{
 			inbox.remove(email);
 			trash.add(email);
+			
+			//inbox/trash won't update unless this happens
+			email.getDestinationAddress().setInbox(inbox);
+			email.getDestinationAddress().setTrash(trash);
+			System.out.println("Moved to trash");
 		}
-		
-		if(trash.contains(email))
+		else if(trash.contains(email))
 		{
 			trash.remove(email);
+			//trash won't update unless this happens
+			email.getDestinationAddress().setTrash(trash);
+			System.out.println("Deleted from trash");
 		}
 	}
 }

@@ -23,16 +23,6 @@ public class EmailAddress
 		Email inboxEmail = new Email();
 		Email sentEmail = new Email();
 		Email trashEmail = new Email();
-		
-		// ----- For debbuging purpose only -----
-		inboxEmail.setSubject("Inbox email subject");
-		sentEmail.setSubject("Sent email subject");
-		trashEmail.setSubject("Trash email subject");
-		
-		inbox.add(inboxEmail);
-		sent.add(sentEmail);
-		trash.add(trashEmail);
-		// --------------------------------------
 	}
 	
 	public EmailAddress(String serverDomain, Account account)
@@ -43,21 +33,6 @@ public class EmailAddress
 		
 		this.serverDomain = serverDomain;
 		this.account = account;
-		
-		// ----- For debbuging purpose only -----
-		Email inboxEmail = new Email();
-		Email sentEmail = new Email();
-		Email trashEmail = new Email();
-		
-		inboxEmail.setSubject("Inbox email subject");
-		sentEmail.setSubject("Sent email subject");
-		trashEmail.setSubject("Trash email subject");
-		
-		inbox.add(inboxEmail);
-		sent.add(sentEmail);
-		trash.add(trashEmail);
-		
-		// --------------------------------------
 	}
 	
 	public Account getAccount() {return account;} 

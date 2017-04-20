@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 public class AccountManager 
 {
-	private Scanner sc;
 	private static ArrayList<Account> accounts;
 	
 	public AccountManager()
