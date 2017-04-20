@@ -222,11 +222,11 @@ public class GUIAccountTreeManager
 		return newEmailAddress;
 	}
 	
-	public static void removeEmailAddressFromNode(String emailAddress, DefaultMutableTreeNode accountBranch)
+	public static void removeEmailAddressFromNode(String emailAddress, DefaultMutableTreeNode accountBranch, DefaultTreeModel model)
 	{
 		DefaultMutableTreeNode emailNode = searchChildByName(emailAddress, accountBranch);
-		
-		accountBranch.remove(emailNode);
+		model.removeNodeFromParent(emailNode);
+
 	}
 
 	public static DefaultMutableTreeNode createNewAccountNode(String accountName)

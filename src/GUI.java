@@ -192,7 +192,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 									if( AccountManager.CreateServer(accountMenuTextField.getText(), accountMenuTextField02.getText(), isLocal ))
 									{
 										//Update GUI 
-										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
+										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), isLocal, root);
 										model.insertNodeInto(GUIAccountTreeManager.createEmailAddressNode(accountMenuTextField02.getText()), AccountBranchNode, AccountBranchNode.getChildCount());
 										
 										accountMenuTextField.setText("");
@@ -261,7 +261,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 									{
 										//Update GUI 
 										DefaultMutableTreeNode AccountBranchNode = GUIAccountTreeManager.getNodeByAccountBranch(accountMenuTextField.getText(), true, root);
-										GUIAccountTreeManager.removeEmailAddressFromNode(accountMenuTextField02.getText(), AccountBranchNode);
+										GUIAccountTreeManager.removeEmailAddressFromNode(accountMenuTextField02.getText(), AccountBranchNode, model);
 										
 										accountMenuTextField.setText("");
 										accountMenuTextField02.setText("");
