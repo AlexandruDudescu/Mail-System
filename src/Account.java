@@ -14,14 +14,6 @@ public class Account
 		remote = new ArrayList<EmailAddress>();
 		
 		emailName = name;
-		
-		// ----- For debbuging purpose only -----
-		EmailAddress localAddress1 = new EmailAddress("local.com", this);
-		EmailAddress remoteAddress1 = new EmailAddress("remote.com", this);
-		
-		local.add(localAddress1);
-		remote.add(remoteAddress1);
-		// --------------------------------------
 	}
 	
 	public String getEmailName()

@@ -14,16 +14,6 @@ public class AccountManager
 	public AccountManager()
 	{
 		accounts = new ArrayList<Account>();
-		
-		// ----- For debbuging purpose only -----
-		Account account1 = new Account("Kevin");
-		Account account2 = new Account("Reed");
-		Account account3 = new Account("Alex");
-		
-		accounts.add(account1);
-		accounts.add(account2);
-		accounts.add(account3);
-		// --------------------------------------
 	}
 	
 	@SuppressWarnings("unchecked")

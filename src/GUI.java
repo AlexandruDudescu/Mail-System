@@ -35,6 +35,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+/**
+ * Main GUI class
+ * @author Reed Schoon
+ *
+ */
 @SuppressWarnings("serial")
 public class GUI extends JComponent implements TreeSelectionListener 
 {
@@ -102,6 +107,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		accountsMenu.add(removeAccount);
 		userMenu.add(addUser);
 		userMenu.add(removeUser);
+		
 		//Button panel code
 		buttonPanel.setLayout(new GridLayout(1, 2));
 		buttonPanel.add(composeButton);
@@ -783,9 +789,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 		
 		tree = new JTree(root);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        
         model = (DefaultTreeModel)tree.getModel();
-        GUIAccountTreeManager.addUserDataToTree(root);
+        
         tree.addTreeSelectionListener(this);
         treeView = new JScrollPane(tree);
         treeView.setSize(new Dimension(1000,500));
