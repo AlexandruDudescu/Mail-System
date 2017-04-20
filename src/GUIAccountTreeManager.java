@@ -268,5 +268,48 @@ public class GUIAccountTreeManager
 		
 		return newAccount;
 	}
-
+	
+	/**
+	 * Removes the indicated email node, and updates the model. If the email is in Inbox or sent
+	 * move it to trah. If it is in trash, discard it permanently
+	 * @param currentNode
+	 * @param model
+	 */
+	public static void DeleteEmail(DefaultMutableTreeNode currentNode, DefaultTreeModel model)
+	{
+		//Check if email
+		if(currentNode.getLevel() != 5)
+			return;
+		
+		
+		DefaultMutableTreeNode parentFolder = (DefaultMutableTreeNode) currentNode.getParent();
+		
+		//Check if not in trash
+		if(!parentFolder.getUserObject().toString().equals("Trash"))
+		{
+			DefaultMutableTreeNode trashNode = searchChildByName("Trash", (DefaultMutableTreeNode) parentFolder.getParent());
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(currentNode.getUserObject());
+			
+			model.insertNodeInto(newNode, trashNode, trashNode.getChildCount());
+			try
+			{
+				model.removeNodeFromParent(currentNode);
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+		else
+		{
+			try
+			{
+				model.removeNodeFromParent(currentNode);
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+	}
 }
