@@ -97,6 +97,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 	JTree tree;
 	JScrollPane treeView;
 	JScrollPane screenScroller = new JScrollPane(screen);
+	JScrollPane bodyScroller = new JScrollPane(bodyTextArea);
 	DefaultMutableTreeNode root;
 	DefaultMutableTreeNode currentlySelectedNode;
 	DefaultTreeModel model;
@@ -139,6 +140,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 		gridLayout.setVgap(10);
 		labelPanel.setLayout(gridLayout);
 
+		screen.setEditable(false);
 		screen.setBackground(Color.white);
 		screen.setBorder(BorderFactory.createBevelBorder(1));
 		
@@ -232,7 +234,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 									else
 									{
 										JOptionPane.showMessageDialog(userMenuFrame, 
-									            "That account already exists. Please choose a different account name.", "Error", 
+									            "Invalid account name. Please check that the user exists and that the account is unique.", "Error", 
 									            JOptionPane.OK_OPTION);
 									}
 								}
@@ -296,17 +298,6 @@ public class GUI extends JComponent implements TreeSelectionListener
 										accountMenuFrame.setVisible(false);
 										accountMenuFrame.dispose();
 										accountMenuFrame = null;
-										
-										//Debug -- outputs a list of all accounts
-										System.out.println("------------------------------------");
-										for( int i = 0; i < AccountManager.getAccountList().size(); i++ )
-										{
-											AccountManager.getAccountList().get(i).getLocalAddresses();
-											for( int j = 0; j < AccountManager.getAccountList().get(i).getLocalAddresses().size(); j++ )
-											{
-												System.out.println(AccountManager.getAccountList().get(i).getLocalAddresses().get(j).getAccount() + "@" + AccountManager.getAccountList().get(i).getLocalAddresses().get(j).getServerDomain() );
-											}
-										}
 									}
 									else
 									{
@@ -485,7 +476,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 				composeFrame.add(new JLabel("Subject:"));
 				composeFrame.add(subjectTextField);
 				composeFrame.add(new JLabel(""));
-				composeFrame.add(bodyTextArea);
+				composeFrame.add(bodyScroller);
 				composeFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
 				//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 				composeFrame.setResizable(false);
@@ -565,7 +556,7 @@ public class GUI extends JComponent implements TreeSelectionListener
 					replyFrame.add(new JLabel("Subject:"));
 					replyFrame.add(subjectTextField);
 					replyFrame.add(new JLabel(""));
-					replyFrame.add(bodyTextArea);
+					replyFrame.add(bodyScroller);
 					replyFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 					//DO_NOTHING_ON_CLOSE is needed for the following addWindowListener
 					replyFrame.setResizable(false);
@@ -703,12 +694,8 @@ public class GUI extends JComponent implements TreeSelectionListener
 					}
 					
 					now = new Date();
-					System.out.println( "Before To size: " + toEmailAddress.getInbox().size() );
-					System.out.println( "Before From size: " + senderEmailAddress.getSent().size());
 					Email newEmail = EmailManager.CreateEmail(toEmailAddress, senderEmailAddress, subjectTextField.getText(), bodyTextArea.getText(), now);
 					EmailManager.sendEmail(newEmail);
-					System.out.println( "After To size: " + toEmailAddress.getInbox().size() );
-					System.out.println( "After From size: " + senderEmailAddress.getSent().size());
 			        
 			        //GUI logic
 			        DefaultMutableTreeNode toNode = GUIAccountTreeManager.getNodeByEmail(toTextField.getText(), root);
@@ -744,12 +731,13 @@ public class GUI extends JComponent implements TreeSelectionListener
 				if(currentlySelectedNode.getLevel() ==  5)
 				{
 					Email removeEmail = (Email)currentlySelectedNode.getUserObject();
-					EmailManager.deleteEmail(removeEmail);
+					if( EmailManager.deleteEmail(removeEmail) )
+					{
+						GUIAccountTreeManager.DeleteEmail(currentlySelectedNode, model);
+						screen.setText(""); 
+						tree.clearSelection();
+					}
 				}
-				
-				GUIAccountTreeManager.DeleteEmail(currentlySelectedNode, model);
-				screen.setText(""); 
-				tree.clearSelection();
 				removeButton.setEnabled(false);
 			}
 		});

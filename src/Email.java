@@ -57,7 +57,8 @@ public class Email
 		String senderAddressString = senderAddress.getAccount().toString() + "@" + senderAddress.getServerDomain();
 		
 		email += "To: " + destinationAddressString + "\n";
-		email += "From: " + senderAddressString + "\n\n";
+		email += "From: " + senderAddressString + "\n";
+		email += "Time Stamp: " + this.timeStamp + "\n\n";
 		
 		email += "Subject: " + this.subject + "\n\n";
 		
