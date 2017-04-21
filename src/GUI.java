@@ -837,6 +837,12 @@ public class GUI extends JComponent implements TreeSelectionListener
 			else if( currentlySelectedNode.getParent().toString().equals("Trash")) 
 			{
 				removeButton.setEnabled(true);
+				replyButton.setEnabled(false);
+			}
+			else
+			{
+				replyButton.setEnabled(false);
+				removeButton.setEnabled(false);				
 			}
 			
 			screen.setText(((Email) currentlySelectedNode.getUserObject()).getContent()); 
